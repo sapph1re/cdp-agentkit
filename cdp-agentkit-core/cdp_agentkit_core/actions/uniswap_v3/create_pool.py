@@ -1,7 +1,10 @@
 from cdp import Wallet
 from pydantic import BaseModel, Field
 
-from cdp_agentkit_core.actions.uniswap_v3.constants import UNISWAP_V3_FACTORY_ABI
+from cdp_agentkit_core.actions.uniswap_v3.constants import (
+    UNISWAP_V3_FACTORY_ABI,
+    get_contract_address,
+)
 
 UNISWAP_V3_CREATE_POOL_PROMPT = """
 This tool will create a Uniswap v3 pool for trading 2 tokens, one of which can be the native gas token. For native gas token, use the address 0x4200000000000000000000000000000000000006, and for ERC20 token, use its contract address. This tool takes the address of the first token, address of the second token, and the fee to charge for trades as inputs. The fee is denominated in hundredths of a bip (i.e. 1e-6) and must be passed a string. Acceptable fee values are 100, 500, 3000, and 10000. Supported networks are Base Sepolia, Base Mainnet, Ethereum Mainnet, Polygon Mainnet, and Arbitrum Mainnet."""
@@ -37,8 +40,10 @@ def uniswap_v3_create_pool(wallet: Wallet, token_a: str, token_b: str, fee: str)
         str: A message containing the pool creation details.
 
     """
+    factory_address = get_contract_address(wallet.network_id)
+
     pool = wallet.invoke_contract(
-        contract_address="0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24",  # TODO - set this based on network id
+        contract_address=factory_address,
         method="createPool",
         abi=UNISWAP_V3_FACTORY_ABI,
         args={
