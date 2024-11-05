@@ -1,9 +1,11 @@
 from cdp import Wallet
-from cdp_agentkit_core.constants import UNISWAP_V3_FACTORY_ABI
 from pydantic import BaseModel, Field
+
+from cdp_agentkit_core.constants import UNISWAP_V3_FACTORY_ABI
 
 CREATE_POOL_PROMPT = """
 This tool will create a Uniswap v3 pool for trading 2 tokens, one of which can be the native gas token. For native gas token, use the address 0x4200000000000000000000000000000000000006. This tool takes the address of the first token, address of the second token, and the fee to charge for trades as inputs. The fee is denominated in hundredths of a bip (i.e. 1e-6) and must be passed a string. Acceptable fee values are 100, 500, 3000, and 10000."""
+
 
 class CreatePoolInput(BaseModel):
     """Input argument schema for create pool action."""

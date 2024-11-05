@@ -1,12 +1,12 @@
 from unittest.mock import patch
 
-from cdp_agentkit_core.constants import UNISWAP_V3_FACTORY_ABI
 import pytest
 
 from cdp_agentkit_core.actions.create_pool import (
     CreatePoolInput,
     create_pool,
 )
+from cdp_agentkit_core.constants import UNISWAP_V3_FACTORY_ABI
 
 MOCK_TOKEN_A = "0x4200000000000000000000000000000000000006"
 MOCK_TOKEN_B = "0x1234567890123456789012345678901234567890"
