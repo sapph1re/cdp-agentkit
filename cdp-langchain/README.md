@@ -9,6 +9,9 @@
   - Run `poetry install` to install `cdp-langchain` dependencies
   - Run `poetry shell` to activate the virtual environment
 
+If you see failures when running `poetry install`, you may need to install rust.
+On macOS, you can install rust via `brew install rust`.
+
 ### Formatting
 `make format`
 

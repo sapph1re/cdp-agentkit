@@ -4,6 +4,7 @@ from langchain_core.tools import BaseTool
 from langchain_core.tools.base import BaseToolkit
 
 from cdp_agentkit_core.actions import (
+    CREATE_POOL_PROMPT,
     DEPLOY_NFT_PROMPT,
     DEPLOY_TOKEN_PROMPT,
     GET_BALANCE_PROMPT,
@@ -13,6 +14,7 @@ from cdp_agentkit_core.actions import (
     REQUEST_FAUCET_FUNDS_PROMPT,
     TRADE_PROMPT,
     TRANSFER_PROMPT,
+    CreatePoolInput,
     DeployNftInput,
     DeployTokenInput,
     GetBalanceInput,
@@ -141,6 +143,12 @@ class CdpToolkit(BaseToolkit):
 
         """
         actions: list[dict] = [
+            {
+                "mode": "create_pool",
+                "name": "create_pool",
+                "description": CREATE_POOL_PROMPT,
+                "args_schema": CreatePoolInput,
+            },
             {
                 "mode": "get_wallet_details",
                 "name": "get_wallet_details",

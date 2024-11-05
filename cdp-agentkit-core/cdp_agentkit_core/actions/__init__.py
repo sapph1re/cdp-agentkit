@@ -1,3 +1,8 @@
+from cdp_agentkit_core.actions.create_pool import (
+    CREATE_POOL_PROMPT,
+    CreatePoolInput,
+    create_pool,
+)
 from cdp_agentkit_core.actions.deploy_nft import (
     DEPLOY_NFT_PROMPT,
     DeployNftInput,
@@ -45,6 +50,9 @@ from cdp_agentkit_core.actions.transfer import (
 )
 
 __all__ = [
+    "CREATE_POOL_PROMPT",
+    "CreatePoolInput",
+    "create_pool",
     "DEPLOY_NFT_PROMPT",
     "DeployNftInput",
     "deploy_nft",
