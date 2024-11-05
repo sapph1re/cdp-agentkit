@@ -19,11 +19,9 @@ Before using the example, ensure that you have the correct version of Python ins
 ```bash
 python --version
 pip --version
-``` 
+```
 
 ## Installation
-If running locally, build `cdp-langchain` using `poetry install` and then run `poetry shell` to activate the virtual environment.
-
 ```bash
 pip install cdp-langchain
 ```
@@ -37,9 +35,6 @@ pip install cdp-langchain
   - "OPENAI_API_KEY"
   - "NETWORK_ID" (Defaults to `base-sepolia`)
 
-You can export these in your terminal, or set them in the `.env` file and use https://pypi.org/project/poetry-plugin-dotenv/#configuration-via-environment-variables 
-
 ```bash
-poetry shell
-poetry run python chatbot.py
+python chatbot.py
 ```
