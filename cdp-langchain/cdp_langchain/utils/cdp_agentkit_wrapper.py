@@ -7,7 +7,6 @@ from langchain_core.utils import get_from_dict_or_env
 from pydantic import BaseModel, model_validator
 
 from cdp_agentkit_core.actions import (
-    create_pool,
     deploy_nft,
     deploy_token,
     get_balance,
@@ -17,6 +16,7 @@ from cdp_agentkit_core.actions import (
     request_faucet_funds,
     trade,
     transfer,
+    uniswap_v3_create_pool,
 )
 
 
@@ -83,7 +83,7 @@ class CdpAgentkitWrapper(BaseModel):
             str: A message containing the pool details.
 
         """
-        return create_pool(wallet=self.wallet, token_a=token_a, token_b=token_b, fee=fee)
+        return uniswap_v3_create_pool(wallet=self.wallet, token_a=token_a, token_b=token_b, fee=fee)
 
     def get_wallet_details_wrapper(self) -> str:
         """Get details about the MPC Wallet by wrapping call to CDP Agentkit Core."""

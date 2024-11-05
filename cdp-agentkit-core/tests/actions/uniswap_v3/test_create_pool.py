@@ -2,11 +2,11 @@ from unittest.mock import patch
 
 import pytest
 
-from cdp_agentkit_core.actions.create_pool import (
-    CreatePoolInput,
-    create_pool,
+from cdp_agentkit_core.actions.uniswap_v3.constants import UNISWAP_V3_FACTORY_ABI
+from cdp_agentkit_core.actions.uniswap_v3.create_pool import (
+    UniswapV3CreatePoolInput,
+    uniswap_v3_create_pool,
 )
-from cdp_agentkit_core.constants import UNISWAP_V3_FACTORY_ABI
 
 MOCK_TOKEN_A = "0x4200000000000000000000000000000000000006"
 MOCK_TOKEN_B = "0x1234567890123456789012345678901234567890"
@@ -15,7 +15,7 @@ MOCK_FEE = "3000"
 
 def test_create_pool_input_model_valid():
     """Test that CreatePoolInput accepts valid parameters."""
-    input_model = CreatePoolInput(
+    input_model = UniswapV3CreatePoolInput(
         token_a=MOCK_TOKEN_A,
         token_b=MOCK_TOKEN_B,
         fee=MOCK_FEE,
@@ -29,7 +29,7 @@ def test_create_pool_input_model_valid():
 def test_create_pool_input_model_missing_params():
     """Test that CreatePoolInput raises error when params are missing."""
     with pytest.raises(ValueError):
-        CreatePoolInput()
+        UniswapV3CreatePoolInput()
 
 
 def test_create_pool_success(wallet_factory, contract_invocation_factory):
@@ -45,7 +45,7 @@ def test_create_pool_success(wallet_factory, contract_invocation_factory):
             mock_contract_instance, "wait", return_value=mock_contract_instance
         ) as mock_contract_wait,
     ):
-        action_response = create_pool(mock_wallet, MOCK_TOKEN_A, MOCK_TOKEN_B, MOCK_FEE)
+        action_response = uniswap_v3_create_pool(mock_wallet, MOCK_TOKEN_A, MOCK_TOKEN_B, MOCK_FEE)
 
         expected_response = f"Created pool for {MOCK_TOKEN_A} and {MOCK_TOKEN_B} with fee {MOCK_FEE} on network {mock_wallet.network_id}.\nTransaction hash for the pool creation: {mock_contract_instance.transaction.transaction_hash}\nTransaction link for the pool creation: {mock_contract_instance.transaction.transaction_link}"
         assert action_response == expected_response
@@ -71,7 +71,7 @@ def test_create_pool_api_error(wallet_factory):
         mock_wallet, "invoke_contract", side_effect=Exception("API error")
     ) as mock_invoke:
         with pytest.raises(Exception, match="API error"):
-            create_pool(mock_wallet, MOCK_TOKEN_A, MOCK_TOKEN_B, MOCK_FEE)
+            uniswap_v3_create_pool(mock_wallet, MOCK_TOKEN_A, MOCK_TOKEN_B, MOCK_FEE)
 
         mock_invoke.assert_called_once_with(
             contract_address="0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24",
