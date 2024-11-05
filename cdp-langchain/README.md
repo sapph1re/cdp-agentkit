@@ -17,11 +17,12 @@ pip install cdp-langchain
 
 ### Environment Setup
 
-Set the following environment variables to access the CDP APIs:
+Set the following environment variables:
 
 ```bash
 CDP_API_KEY_NAME=<your-api-key-name>
 CDP_API_KEY_PRIVATE_KEY=<your-private-key>
+OPEN_API_KEY=<your-openai-api-key>
 NETWORK_ID=base-sepolia  # Optional: Defaults to base-sepolia
 ```
 

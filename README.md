@@ -30,11 +30,11 @@ Core primitives and framework agnostic tools that are meant to be composable and
 See [CDP Agentkit Core](./cdp-agentkit-core/README.md) to get started!
 
 ### cdp-langchain
-Langchain Toolkit extension of CDP Agentkit.
+Langchain Toolkit extension of CDP Agentkit. Enables agentic workflows to interact with onchain actions.
 See [CDP Langchain](./cdp-langchain/README.md) to get started!
 
 ### twitter-langchain
-Langchain Toolkit extension for Twitter.
+Langchain Toolkit extension for Twitter. Enables agentic workflows to interact with Twitter, such as to post a tweet.
 See [Twitter Langchain](./twitter-langchain/README.md) to get started!
 
 ## Contributing
