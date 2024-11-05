@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from cdp_agentkit_core.constants import UNISWAP_V3_FACTORY_ABI
 import pytest
 
 from cdp_agentkit_core.actions.create_pool import (
@@ -7,9 +8,9 @@ from cdp_agentkit_core.actions.create_pool import (
     create_pool,
 )
 
-MOCK_TOKEN_A = "0x4200000000000000000000000000000000000006"  # Mock native token
-MOCK_TOKEN_B = "0x1234567890123456789012345678901234567890"  # Mock ERC20 token
-MOCK_FEE = "3000"  # 0.3% fee
+MOCK_TOKEN_A = "0x4200000000000000000000000000000000000006"
+MOCK_TOKEN_B = "0x1234567890123456789012345678901234567890"
+MOCK_FEE = "3000"
 
 
 def test_create_pool_input_model_valid():
@@ -52,7 +53,7 @@ def test_create_pool_success(wallet_factory, contract_invocation_factory):
         mock_invoke.assert_called_once_with(
             contract_address="0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24",
             method="createPool",
-            abi=mock_invoke.call_args[1]["abi"],  # We don't need to check the full ABI
+            abi=UNISWAP_V3_FACTORY_ABI,
             args={
                 "tokenA": MOCK_TOKEN_A,
                 "tokenB": MOCK_TOKEN_B,
@@ -75,7 +76,7 @@ def test_create_pool_api_error(wallet_factory):
         mock_invoke.assert_called_once_with(
             contract_address="0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24",
             method="createPool",
-            abi=mock_invoke.call_args[1]["abi"],  # We don't need to check the full ABI
+            abi=UNISWAP_V3_FACTORY_ABI,
             args={
                 "tokenA": MOCK_TOKEN_A,
                 "tokenB": MOCK_TOKEN_B,
