@@ -32,8 +32,8 @@ def uniswap_v3_create_pool(wallet: Wallet, token_a: str, token_b: str, fee: str)
 
     Args:
         wallet (Wallet): The wallet to create the pool from.
-        token_a (str): The address of the first token to trade.
-        token_b (str): The address of the second token to trade.
+        token_a (str): The address of the first token to trade, e.g. 0x4200000000000000000000000000000000000006 for native gas token
+        token_b (str): The address of the second token to trade, e.g. 0x1234567890123456789012345678901234567890 for ERC20 token
         fee (str): The fee to charge for trades, denominated in hundredths of a bip (i.e. 1e-6).
 
     Returns:
