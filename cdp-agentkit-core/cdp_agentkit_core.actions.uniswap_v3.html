@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>cdp_agentkit_core.actions.uniswap_v3 package &#8212; CDP Agentkit - Core 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=d45e8c67"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="cdp_agentkit_core.actions package" href="cdp_agentkit_core.actions.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="cdp-agentkit-core-actions-uniswap-v3-package">
+<h1>cdp_agentkit_core.actions.uniswap_v3 package<a class="headerlink" href="#cdp-agentkit-core-actions-uniswap-v3-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-cdp_agentkit_core.actions.uniswap_v3.constants">
+<span id="cdp-agentkit-core-actions-uniswap-v3-constants-module"></span><h2>cdp_agentkit_core.actions.uniswap_v3.constants module<a class="headerlink" href="#module-cdp_agentkit_core.actions.uniswap_v3.constants" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cdp_agentkit_core.actions.uniswap_v3.constants.get_contract_address">
+<span class="sig-prename descclassname"><span class="pre">cdp_agentkit_core.actions.uniswap_v3.constants.</span></span><span class="sig-name descname"><span class="pre">get_contract_address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cdp_agentkit_core.actions.uniswap_v3.constants.get_contract_address" title="Link to this definition">¶</a></dt>
+<dd><p>Get the Uniswap V3 Factory contract address for the specified network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>network</strong> (<em>str</em>) – The network ID to get the contract address for.
+Valid networks are: base-sepolia, base-mainnet, ethereum-mainnet,
+arbitrum-mainnet, polygon-mainnet.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The contract address for the specified network.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the specified network is not supported.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-cdp_agentkit_core.actions.uniswap_v3.create_pool">
+<span id="cdp-agentkit-core-actions-uniswap-v3-create-pool-module"></span><h2>cdp_agentkit_core.actions.uniswap_v3.create_pool module<a class="headerlink" href="#module-cdp_agentkit_core.actions.uniswap_v3.create_pool" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cdp_agentkit_core.actions.uniswap_v3.create_pool.UniswapV3CreatePoolInput">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cdp_agentkit_core.actions.uniswap_v3.create_pool.</span></span><span class="sig-name descname"><span class="pre">UniswapV3CreatePoolInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cdp_agentkit_core.actions.uniswap_v3.create_pool.UniswapV3CreatePoolInput" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Input argument schema for create pool action.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cdp_agentkit_core.actions.uniswap_v3.create_pool.UniswapV3CreatePoolInput.fee">
+<span class="sig-name descname"><span class="pre">fee</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#cdp_agentkit_core.actions.uniswap_v3.create_pool.UniswapV3CreatePoolInput.fee" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cdp_agentkit_core.actions.uniswap_v3.create_pool.UniswapV3CreatePoolInput.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[Dict[str,</span> <span class="pre">ComputedFieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#cdp_agentkit_core.actions.uniswap_v3.create_pool.UniswapV3CreatePoolInput.model_computed_fields" title="Link to this definition">¶</a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cdp_agentkit_core.actions.uniswap_v3.create_pool.UniswapV3CreatePoolInput.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#cdp_agentkit_core.actions.uniswap_v3.create_pool.UniswapV3CreatePoolInput.model_config" title="Link to this definition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cdp_agentkit_core.actions.uniswap_v3.create_pool.UniswapV3CreatePoolInput.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[Dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'fee':</span> <span class="pre">FieldInfo(annotation=str,</span> <span class="pre">required=True,</span> <span class="pre">description='The</span> <span class="pre">fee</span> <span class="pre">to</span> <span class="pre">charge</span> <span class="pre">for</span> <span class="pre">trades,</span> <span class="pre">denominated</span> <span class="pre">in</span> <span class="pre">hundredths</span> <span class="pre">of</span> <span class="pre">a</span> <span class="pre">bip</span> <span class="pre">(i.e.</span> <span class="pre">1e-6).</span> <span class="pre">Acceptable</span> <span class="pre">fee</span> <span class="pre">values</span> <span class="pre">are</span> <span class="pre">100,</span> <span class="pre">500,</span> <span class="pre">3000,</span> <span class="pre">and</span> <span class="pre">10000.'),</span> <span class="pre">'token_a':</span> <span class="pre">FieldInfo(annotation=str,</span> <span class="pre">required=True,</span> <span class="pre">description='The</span> <span class="pre">address</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">first</span> <span class="pre">token</span> <span class="pre">to</span> <span class="pre">trade,</span> <span class="pre">e.g.</span> <span class="pre">0x4200000000000000000000000000000000000006</span> <span class="pre">for</span> <span class="pre">native</span> <span class="pre">gas</span> <span class="pre">token'),</span> <span class="pre">'token_b':</span> <span class="pre">FieldInfo(annotation=str,</span> <span class="pre">required=True,</span> <span class="pre">description='The</span> <span class="pre">address</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">second</span> <span class="pre">token</span> <span class="pre">to</span> <span class="pre">trade,</span> <span class="pre">e.g.</span> <span class="pre">0x1234567890123456789012345678901234567890</span> <span class="pre">for</span> <span class="pre">ERC20</span> <span class="pre">token')}</span></em><a class="headerlink" href="#cdp_agentkit_core.actions.uniswap_v3.create_pool.UniswapV3CreatePoolInput.model_fields" title="Link to this definition">¶</a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] objects.</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cdp_agentkit_core.actions.uniswap_v3.create_pool.UniswapV3CreatePoolInput.token_a">
+<span class="sig-name descname"><span class="pre">token_a</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#cdp_agentkit_core.actions.uniswap_v3.create_pool.UniswapV3CreatePoolInput.token_a" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cdp_agentkit_core.actions.uniswap_v3.create_pool.UniswapV3CreatePoolInput.token_b">
+<span class="sig-name descname"><span class="pre">token_b</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#cdp_agentkit_core.actions.uniswap_v3.create_pool.UniswapV3CreatePoolInput.token_b" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cdp_agentkit_core.actions.uniswap_v3.create_pool.uniswap_v3_create_pool">
+<span class="sig-prename descclassname"><span class="pre">cdp_agentkit_core.actions.uniswap_v3.create_pool.</span></span><span class="sig-name descname"><span class="pre">uniswap_v3_create_pool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wallet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fee</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cdp_agentkit_core.actions.uniswap_v3.create_pool.uniswap_v3_create_pool" title="Link to this definition">¶</a></dt>
+<dd><p>Create a Uniswap v3 pool for trading 2 tokens, one of which can be the native gas token.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wallet</strong> (<em>Wallet</em>) – The wallet to create the pool from.</p></li>
+<li><p><strong>token_a</strong> (<em>str</em>) – The address of the first token to trade, e.g. 0x4200000000000000000000000000000000000006 for native gas token</p></li>
+<li><p><strong>token_b</strong> (<em>str</em>) – The address of the second token to trade, e.g. 0x1234567890123456789012345678901234567890 for ERC20 token</p></li>
+<li><p><strong>fee</strong> (<em>str</em>) – The fee to charge for trades, denominated in hundredths of a bip (i.e. 1e-6).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A message containing the pool creation details.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-cdp_agentkit_core.actions.uniswap_v3">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cdp_agentkit_core.actions.uniswap_v3" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CDP Agentkit - Core</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">cdp_agentkit_core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cdp_agentkit_core.html">cdp_agentkit_core package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">cdp_agentkit_core</a><ul>
+  <li><a href="cdp_agentkit_core.html">cdp_agentkit_core package</a><ul>
+  <li><a href="cdp_agentkit_core.actions.html">cdp_agentkit_core.actions package</a><ul>
+      <li>Previous: <a href="cdp_agentkit_core.actions.html" title="previous chapter">cdp_agentkit_core.actions package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/cdp_agentkit_core.actions.uniswap_v3.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
