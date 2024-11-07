@@ -60,11 +60,7 @@ class CdpToolkit(BaseToolkit):
             mint_nft
             deploy_nft
             register_basename
-            uniswap_v3_create_pool
-            uniswap_v3_get_pool
-            uniswap_v3_get_pool_observe
-            uniswap_v3_get_pool_slot0
-            uniswap_v3_get_pool_liquidity
+            wow_create_token
     Use within an agent:
         .. code-block:: python
 
