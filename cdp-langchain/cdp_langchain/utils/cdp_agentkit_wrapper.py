@@ -17,6 +17,10 @@ from cdp_agentkit_core.actions import (
     trade,
     transfer,
     uniswap_v3_create_pool,
+    uniswap_v3_get_pool,
+    uniswap_v3_get_pool_liquidity,
+    uniswap_v3_get_pool_observe,
+    uniswap_v3_get_pool_slot0,
 )
 
 
@@ -87,6 +91,75 @@ class CdpAgentkitWrapper(BaseModel):
 
         """
         return uniswap_v3_create_pool(wallet=self.wallet, token_a=token_a, token_b=token_b, fee=fee)
+
+    def uniswap_v3_get_pool_wrapper(
+        self, network_id: str, token_a: str, token_b: str, fee: str
+    ) -> str:
+        """Get the pool contract address for a Uniswap v3 pool by wrapping call to CDP Agentkit Core.
+
+        Args:
+            network_id (str): The network ID of the network to get the pool on.
+            token_a (str): The contract address of the first token in the pool.
+            token_b (str): The contract address of the second token in the pool.
+            fee (str): The fee for the pool.
+
+        Returns:
+            str: A message containing the pool contract address.
+
+        """
+        return uniswap_v3_get_pool(network_id=network_id, token_a=token_a, token_b=token_b, fee=fee)
+
+    def uniswap_v3_get_pool_liquidity_wrapper(
+        self, network_id: str, pool_contract_address: str
+    ) -> str:
+        """Get the liquidity for a Uniswap v3 pool by wrapping call to CDP Agentkit Core.
+
+        Args:
+            network_id (str): The network ID of the network to get the pool on.
+            pool_contract_address (str): The contract address of the pool to get the liquidity for.
+
+        Returns:
+            str: A message containing the liquidity for the pool.
+
+        """
+        return uniswap_v3_get_pool_liquidity(
+            network_id=network_id, pool_contract_address=pool_contract_address
+        )
+
+    def uniswap_v3_get_pool_observe_wrapper(
+        self, network_id: str, pool_contract_address: str, seconds_ago: list[str]
+    ) -> str:
+        """Get the observation for a Uniswap v3 pool by wrapping call to CDP Agentkit Core.
+
+        Args:
+            network_id (str): The network ID of the network to get the pool on.
+            pool_contract_address (str): The contract address of the pool to get the observation for.
+            seconds_ago (List[str]): The list of seconds ago values to get the observation for. The seconds ago value is the number of seconds ago from the current block timestamp to get the observation for and is provided as a string.
+
+        Returns:
+            str: A message containing the observation for the pool.
+
+        """
+        return uniswap_v3_get_pool_observe(
+            network_id=network_id,
+            pool_contract_address=pool_contract_address,
+            seconds_ago=seconds_ago,
+        )
+
+    def uniswap_v3_get_pool_slot0_wrapper(self, network_id: str, pool_contract_address: str) -> str:
+        """Get the slot0 for a Uniswap v3 pool by wrapping call to CDP Agentkit Core.
+
+        Args:
+            network_id (str): The network ID of the network to get the pool on.
+            pool_contract_address (str): The contract address of the pool to get the slot0 for.
+
+        Returns:
+            str: A message containing the slot0 for the pool.
+
+        """
+        return uniswap_v3_get_pool_slot0(
+            network_id=network_id, pool_contract_address=pool_contract_address
+        )
 
     def get_wallet_details_wrapper(self) -> str:
         """Get details about the MPC Wallet by wrapping call to CDP Agentkit Core."""
@@ -232,6 +305,14 @@ class CdpAgentkitWrapper(BaseModel):
             return self.trade_wrapper(**kwargs)
         elif mode == "uniswap_v3_create_pool":
             return self.uniswap_v3_create_pool_wrapper(**kwargs)
+        elif mode == "uniswap_v3_get_pool":
+            return self.uniswap_v3_get_pool_wrapper(**kwargs)
+        elif mode == "uniswap_v3_get_pool_liquidity":
+            return self.uniswap_v3_get_pool_liquidity_wrapper(**kwargs)
+        elif mode == "uniswap_v3_get_pool_observe":
+            return self.uniswap_v3_get_pool_observe_wrapper(**kwargs)
+        elif mode == "uniswap_v3_get_pool_slot0":
+            return self.uniswap_v3_get_pool_slot0_wrapper(**kwargs)
         elif mode == "deploy_token":
             return self.deploy_token_wrapper(**kwargs)
         elif mode == "mint_nft":

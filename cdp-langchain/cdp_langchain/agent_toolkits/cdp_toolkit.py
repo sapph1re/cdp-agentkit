@@ -14,6 +14,8 @@ from cdp_agentkit_core.actions import (
     TRADE_PROMPT,
     TRANSFER_PROMPT,
     UNISWAP_V3_CREATE_POOL_PROMPT,
+    UNISWAP_V3_GET_POOL_LIQUIDITY_PROMPT,
+    UNISWAP_V3_GET_POOL_PROMPT,
     DeployNftInput,
     DeployTokenInput,
     GetBalanceInput,
@@ -24,7 +26,13 @@ from cdp_agentkit_core.actions import (
     TradeInput,
     TransferInput,
     UniswapV3CreatePoolInput,
+    UniswapV3GetPoolInput,
+    UniswapV3GetPoolLiquidityInput,
+    UniswapV3GetPoolObserveInput,
+    UniswapV3GetPoolSlot0Input,
 )
+from cdp_agentkit_core.actions.uniswap_v3.get_pool_observe import UNISWAP_V3_GET_POOL_OBSERVE_PROMPT
+from cdp_agentkit_core.actions.uniswap_v3.get_pool_slot0 import UNISWAP_V3_GET_POOL_SLOT0_PROMPT
 from cdp_langchain.tools import CdpAction
 from cdp_langchain.utils import CdpAgentkitWrapper
 
@@ -82,7 +90,10 @@ class CdpToolkit(BaseToolkit):
             deploy_nft
             register_basename
             uniswap_v3_create_pool
-
+            uniswap_v3_get_pool
+            uniswap_v3_get_pool_observe
+            uniswap_v3_get_pool_slot0
+            uniswap_v3_get_pool_liquidity
     Use within an agent:
         .. code-block:: python
 
@@ -149,6 +160,30 @@ class CdpToolkit(BaseToolkit):
                 "name": "uniswap_v3_create_pool",
                 "description": UNISWAP_V3_CREATE_POOL_PROMPT,
                 "args_schema": UniswapV3CreatePoolInput,
+            },
+            {
+                "mode": "uniswap_v3_get_pool",
+                "name": "uniswap_v3_get_pool",
+                "description": UNISWAP_V3_GET_POOL_PROMPT,
+                "args_schema": UniswapV3GetPoolInput,
+            },
+            {
+                "mode": "uniswap_v3_get_pool_observe",
+                "name": "uniswap_v3_get_pool_observe",
+                "description": UNISWAP_V3_GET_POOL_OBSERVE_PROMPT,
+                "args_schema": UniswapV3GetPoolObserveInput,
+            },
+            {
+                "mode": "uniswap_v3_get_pool_slot0",
+                "name": "uniswap_v3_get_pool_slot0",
+                "description": UNISWAP_V3_GET_POOL_SLOT0_PROMPT,
+                "args_schema": UniswapV3GetPoolSlot0Input,
+            },
+            {
+                "mode": "uniswap_v3_get_pool_liquidity",
+                "name": "uniswap_v3_get_pool_liquidity",
+                "description": UNISWAP_V3_GET_POOL_LIQUIDITY_PROMPT,
+                "args_schema": UniswapV3GetPoolLiquidityInput,
             },
             {
                 "mode": "get_wallet_details",
