@@ -13,6 +13,7 @@ from cdp_agentkit_core.actions.uniswap_v3.get_pool import UniswapV3GetPoolAction
 from cdp_agentkit_core.actions.uniswap_v3.get_pool_liquidity import UniswapV3GetPoolLiquidityAction
 from cdp_agentkit_core.actions.uniswap_v3.get_pool_observe import UniswapV3GetPoolObserveAction
 from cdp_agentkit_core.actions.uniswap_v3.get_pool_slot0 import UniswapV3GetPoolSlot0Action
+from cdp_agentkit_core.actions.wow.create_token import WowCreateTokenAction
 
 
 # WARNING: All new CdpAction subclasses must be imported above, otherwise they will not be discovered
@@ -43,5 +44,6 @@ __all__ = [
     "UniswapV3GetPoolSlot0Action",
     "UniswapV3GetPoolObserveAction",
     "UniswapV3GetPoolLiquidityAction",
+    "WowCreateTokenAction",
     "CDP_ACTIONS",
 ]
