@@ -9,7 +9,7 @@ from cdp_agentkit_core.actions.uniswap_v3.constants import (
 )
 
 UNISWAP_V3_GET_POOL_OBSERVE_PROMPT = """
-This tool will get the observation details for Uniswap V3 pools that have been previously created. It takes in a networkId, pool contract address, and list of secondsAgo values and returns the tickCumulative and secondsPerLiquidityCumulativeX128 for each secondsAgo value.
+This tool will get the observation details for Uniswap V3 pools that have been previously created. It takes in a network ID, pool contract address, and list of secondsAgo values and returns the tickCumulative and secondsPerLiquidityCumulativeX128 for each secondsAgo value.
 The tickCumulative is the tick multiplied by seconds elapsed for the life of the pool as of the observation timestamp.
 The secondsPerLiquidityCumulativesX128 is the seconds per in range liquidity for the life of the pool as of the observation timestamp.
 Supported networks are Base Sepolia, Base Mainnet, Ethereum Mainnet, Polygon Mainnet, and Arbitrum Mainnet.
