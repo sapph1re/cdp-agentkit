@@ -4,7 +4,11 @@ from cdp import Wallet
 from pydantic import BaseModel, Field
 
 from cdp_agentkit_core.actions import CdpAction
-from cdp_agentkit_core.actions.wow.constants import WOW_FACTORY_ABI, get_factory_address
+from cdp_agentkit_core.actions.wow.constants import (
+    GENERIC_TOKEN_METADATA_URI,
+    WOW_FACTORY_ABI,
+    get_factory_address,
+)
 
 WOW_CREATE_TOKEN_PROMPT = """
 This tool will create a Zora Wow ERC20 memecoin using the WoW factory. This tool takes the token name and token symbol. It is only supported on Base Sepolia and Base Mainnet.
@@ -38,9 +42,6 @@ def wow_create_token(wallet: Wallet, name: str, symbol: str) -> str:
     """
     factory_address = get_factory_address(wallet.network_id)
 
-    # Generic JSON metadata for all tokens
-    token_uri = "ipfs://QmY1GqprFYvojCcUEKgqHeDj9uhZD9jmYGrQTfA9vAE78J"
-
     invocation = wallet.invoke_contract(
         contract_address=factory_address,
         method="deploy",
@@ -48,7 +49,7 @@ def wow_create_token(wallet: Wallet, name: str, symbol: str) -> str:
         args={
             "_tokenCreator": wallet.default_address.address_id,
             "_platformReferrer": "0x0000000000000000000000000000000000000000",
-            "_tokenURI": token_uri,
+            "_tokenURI": GENERIC_TOKEN_METADATA_URI,
             "_name": name,
             "_symbol": symbol,
         },

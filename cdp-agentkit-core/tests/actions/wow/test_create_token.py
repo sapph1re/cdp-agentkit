@@ -2,7 +2,11 @@ from unittest.mock import patch
 
 import pytest
 
-from cdp_agentkit_core.actions.wow.constants import WOW_FACTORY_ABI, get_factory_address
+from cdp_agentkit_core.actions.wow.constants import (
+    GENERIC_TOKEN_METADATA_URI,
+    WOW_FACTORY_ABI,
+    get_factory_address,
+)
 from cdp_agentkit_core.actions.wow.create_token import (
     WowCreateTokenInput,
     wow_create_token,
@@ -12,7 +16,6 @@ MOCK_NAME = "Test Token"
 MOCK_SYMBOL = "TEST"
 MOCK_NETWORK_ID = "base-sepolia"
 MOCK_WALLET_ADDRESS = "0x1234567890123456789012345678901234567890"
-MOCK_TOKEN_URI = "ipfs://QmY1GqprFYvojCcUEKgqHeDj9uhZD9jmYGrQTfA9vAE78J"
 
 
 def test_create_token_input_model_valid():
@@ -63,7 +66,7 @@ def test_create_token_success(wallet_factory, contract_invocation_factory):
             args={
                 "_tokenCreator": MOCK_WALLET_ADDRESS,
                 "_platformReferrer": "0x0000000000000000000000000000000000000000",
-                "_tokenURI": MOCK_TOKEN_URI,
+                "_tokenURI": GENERIC_TOKEN_METADATA_URI,
                 "_name": MOCK_NAME,
                 "_symbol": MOCK_SYMBOL,
             },
@@ -94,7 +97,7 @@ def test_create_token_api_error(wallet_factory):
             args={
                 "_tokenCreator": MOCK_WALLET_ADDRESS,
                 "_platformReferrer": "0x0000000000000000000000000000000000000000",
-                "_tokenURI": MOCK_TOKEN_URI,
+                "_tokenURI": GENERIC_TOKEN_METADATA_URI,
                 "_name": MOCK_NAME,
                 "_symbol": MOCK_SYMBOL,
             },

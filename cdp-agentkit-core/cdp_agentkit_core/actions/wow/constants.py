@@ -188,3 +188,6 @@ def get_factory_address(network: str) -> str:
             f"Invalid network: {network}. Valid networks are: {', '.join(WOW_FACTORY_CONTRACT_ADDRESSES.keys())}"
         )
     return WOW_FACTORY_CONTRACT_ADDRESSES[network]
+
+
+GENERIC_TOKEN_METADATA_URI = "ipfs://QmY1GqprFYvojCcUEKgqHeDj9uhZD9jmYGrQTfA9vAE78J"
