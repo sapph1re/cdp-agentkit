@@ -15,7 +15,9 @@ from cdp_agentkit_core.actions import (
     TRANSFER_PROMPT,
     UNISWAP_V3_CREATE_POOL_PROMPT,
     UNISWAP_V3_GET_POOL_LIQUIDITY_PROMPT,
+    UNISWAP_V3_GET_POOL_OBSERVE_PROMPT,
     UNISWAP_V3_GET_POOL_PROMPT,
+    UNISWAP_V3_GET_POOL_SLOT0_PROMPT,
     DeployNftInput,
     DeployTokenInput,
     GetBalanceInput,
@@ -31,8 +33,6 @@ from cdp_agentkit_core.actions import (
     UniswapV3GetPoolObserveInput,
     UniswapV3GetPoolSlot0Input,
 )
-from cdp_agentkit_core.actions.uniswap_v3.get_pool_observe import UNISWAP_V3_GET_POOL_OBSERVE_PROMPT
-from cdp_agentkit_core.actions.uniswap_v3.get_pool_slot0 import UNISWAP_V3_GET_POOL_SLOT0_PROMPT
 from cdp_langchain.tools import CdpAction
 from cdp_langchain.utils import CdpAgentkitWrapper
 
