@@ -1,4 +1,3 @@
-
 from cdp import SmartContract
 from pydantic import BaseModel, Field
 
@@ -50,7 +49,7 @@ def uniswap_v3_get_pool_observe(
         contract_address=pool_contract_address,
         method="observe",
         abi=UNISWAP_V3_POOL_ABI,
-        args={},
+        args={"secondsAgos": seconds_ago},
     )
 
     return f"Observations for pool {pool_contract_address} are {observations}."
