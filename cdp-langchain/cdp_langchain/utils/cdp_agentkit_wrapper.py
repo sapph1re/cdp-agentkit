@@ -27,8 +27,7 @@ class CdpAgentkitWrapper(BaseModel):
         cdp_api_key_private_key = get_from_dict_or_env(
             values, "cdp_api_key_private_key", "CDP_API_KEY_PRIVATE_KEY"
         )
-        # network_id = get_from_dict_or_env(values, "network_id", "NETWORK_ID", "base-sepolia")
-        network_id = "base-mainnet"
+        network_id = get_from_dict_or_env(values, "network_id", "NETWORK_ID", "base-sepolia")
         wallet_data_json = values.get("cdp_wallet_data")
 
         try:
