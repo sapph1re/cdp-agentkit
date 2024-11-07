@@ -1,6 +1,9 @@
+from collections.abc import Callable
+
 from cdp import SmartContract
 from pydantic import BaseModel, Field
 
+from cdp_agentkit_core.actions.cdp_action import CdpAction
 from cdp_agentkit_core.actions.uniswap_v3.constants import (
     UNISWAP_V3_FACTORY_ABI,
     get_contract_address,
@@ -56,3 +59,12 @@ def uniswap_v3_get_pool(network_id: str, token_a: str, token_b: str, fee: str) -
     )
 
     return f"Pool contract address for {token_a} and {token_b} with fee {fee} on network {network_id} is {pool_address}."
+
+
+class UniswapV3GetPoolAction(CdpAction):
+    """Uniswap V3 get pool action."""
+
+    name: str = "uniswap_v3_get_pool"
+    description: str = UNISWAP_V3_GET_POOL_PROMPT
+    args_schema: type[BaseModel] | None = UniswapV3GetPoolInput
+    func: Callable[..., str] = uniswap_v3_get_pool

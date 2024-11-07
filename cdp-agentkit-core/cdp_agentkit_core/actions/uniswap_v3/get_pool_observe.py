@@ -1,6 +1,9 @@
+from collections.abc import Callable
+
 from cdp import SmartContract
 from pydantic import BaseModel, Field
 
+from cdp_agentkit_core.actions.cdp_action import CdpAction
 from cdp_agentkit_core.actions.uniswap_v3.constants import (
     UNISWAP_V3_POOL_ABI,
 )
@@ -53,3 +56,12 @@ def uniswap_v3_get_pool_observe(
     )
 
     return f"Observations for pool {pool_contract_address} are {observations}."
+
+
+class UniswapV3GetPoolObserveAction(CdpAction):
+    """Uniswap V3 get pool observe action."""
+
+    name: str = "uniswap_v3_get_pool_observe"
+    description: str = UNISWAP_V3_GET_POOL_OBSERVE_PROMPT
+    args_schema: type[BaseModel] | None = UniswapV3GetPoolObserveInput
+    func: Callable[..., str] = uniswap_v3_get_pool_observe
