@@ -1,11 +1,9 @@
 """Util that calls Twitter API."""
 
+import inspect
+from collections.abc import Callable
 from typing import Any
 
-from cdp_agentkit_core.actions.social.twitter import (
-    account_details,
-    post_tweet,
-)
 from langchain_core.utils import get_from_dict_or_env
 from pydantic import BaseModel, model_validator
 
@@ -46,34 +44,14 @@ class TwitterApiWrapper(BaseModel):
 
         return values
 
-    def account_details_wrapper(self) -> str:
-        """Get the authenticated Twitter (X) user account details.
+    def run_action(self, func: Callable[..., str], **kwargs) -> str:
+        """Run a Twitter Action."""
+        import tweepy
 
-        Returns:
-            str: A message containing account details for the authenticated user context in JSON format.
+        func_signature = inspect.signature(func)
+        first_kwarg = next(iter(func_signature.parameters.values()), None)
 
-        """
-        return account_details(client=self.client)
-
-    def post_tweet_wrapper(self, tweet: str) -> str:
-        """Post tweet to Twitter.
-
-        Args:
-            client (tweepy.Client): The tweepy client to use.
-            tweet (str): The text of the tweet to post to twitter. Tweets can be maximum 280 characters.
-
-        Returns:
-            str: A message containing the result of the post action and the tweet.
-
-        """
-        return post_tweet(client=self.client, tweet=tweet)
-
-    def run(self, mode: str, **kwargs) -> str:
-        """Run the action via the Twitter API."""
-        if mode == "account_details":
-            return self.account_details_wrapper()
-        elif mode == "post_tweet":
-            return self.post_tweet_wrapper(**kwargs)
+        if first_kwarg and first_kwarg.annotation is tweepy.Client:
+            return func(self.client, **kwargs)
         else:
-            raise ValueError("Invalid mode: " + mode)
-
+            return func(**kwargs)
