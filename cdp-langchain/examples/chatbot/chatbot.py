@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 import time
@@ -13,6 +14,9 @@ from cdp_langchain.utils import CdpAgentkitWrapper
 
 # Configure a file to persist the agent's CDP MPC Wallet Data.
 wallet_data_file = "wallet_data.txt"
+
+# Configure a file to hold CDP config.
+cdp_config_file_path = "cdp_config.json"
 
 
 def initialize_agent():
@@ -31,6 +35,11 @@ def initialize_agent():
     if wallet_data is not None:
         # If there is a persisted agentic wallet, load it and pass to the CDP Agentkit Wrapper.
         values = {"cdp_wallet_data": wallet_data}
+
+    with open(os.path.expanduser(cdp_config_file_path)) as f:
+        cdp_config_data = json.load(f)
+        values["cdp_api_key_name"] = cdp_config_data.get("cdp_api_key_name")
+        values["cdp_api_key_private_key"] = cdp_config_data.get("cdp_api_key_private_key")
 
     agentkit = CdpAgentkitWrapper(**values)
 

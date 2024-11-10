@@ -30,10 +30,9 @@ pip install cdp-langchain
 
 ### Set ENV Vars
 - Ensure the following ENV Vars are set:
-  - "CDP_API_KEY_NAME"
-  - "CDP_API_KEY_PRIVATE_KEY"
   - "OPENAI_API_KEY"
   - "NETWORK_ID" (Defaults to `base-sepolia`)
+- Update `./cdp_config.json` with your CDP API Key name and private key
 
 ```bash
 python chatbot.py
