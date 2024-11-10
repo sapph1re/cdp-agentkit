@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>CDP Agentkit Extension - Langchain Toolkit &#8212; CDP Agentkit - LangChain 0.0.1 documentation</title>
+    <title>CDP Agentkit Extension - Langchain Toolkit &#8212; CDP Agentkit - LangChain 0.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=686e5160" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <script src="_static/documentation_options.js?v=d45e8c67"></script>
+    <script src="_static/documentation_options.js?v=47de8214"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -53,10 +53,10 @@
 <section id="environment-setup">
 <h3>Environment Setup<a class="headerlink" href="#environment-setup" title="Link to this heading">¶</a></h3>
 <p>Set the following environment variables:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">CDP_API_KEY_NAME</span><span class="o">=</span>&lt;your-api-key-name&gt;
-<span class="nv">CDP_API_KEY_PRIVATE_KEY</span><span class="o">=</span>&lt;your-private-key&gt;
-<span class="nv">OPENAI_API_KEY</span><span class="o">=</span>&lt;your-openai-api-key&gt;
-<span class="nv">NETWORK_ID</span><span class="o">=</span>base-sepolia<span class="w">  </span><span class="c1"># Optional: Defaults to base-sepolia</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">CDP_API_KEY_NAME</span><span class="o">=</span>&lt;your-api-key-name&gt;
+<span class="nb">export</span><span class="w"> </span><span class="nv">CDP_API_KEY_PRIVATE_KEY</span><span class="o">=</span><span class="s1">$&#39;&lt;your-private-key&gt;&#39;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>&lt;your-openai-api-key&gt;
+<span class="nb">export</span><span class="w"> </span><span class="nv">NETWORK_ID</span><span class="o">=</span>base-sepolia<span class="w">  </span><span class="c1"># Optional: Defaults to base-sepolia</span>
 </pre></div>
 </div>
 </section>
@@ -92,6 +92,7 @@
 <li><p><strong>mint_nft</strong> - Mint NFTs from existing contracts</p></li>
 <li><p><strong>deploy_nft</strong> - Deploy new NFT contracts</p></li>
 <li><p><strong>register_basename</strong> - Register a basename for the wallet</p></li>
+<li><p><strong>wow_create_token</strong> - Deploy a token using Zora’s Wow Launcher (Bonding Curve)</p></li>
 </ol>
 </section>
 <section id="using-with-an-agent">
@@ -155,14 +156,6 @@
 <section id="contributing">
 <h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">¶</a></h2>
 <p>See <a class="reference internal" href="#../CONTRIBUTING.md"><span class="xref myst">CONTRIBUTING.md</span></a> for detailed setup instructions and contribution guidelines.</p>
-</section>
-<section id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h2>
-<p>For detailed documentation of all CDP features and configurations, visit:</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://docs.cdp.coinbase.com/mpc-wallet/docs/welcome">CDP Documentation</a></p></li>
-<li><p><a class="reference external" href="https://api.python.langchain.com/en/latest/agent_toolkits/cdp_langchain.agent_toolkits.cdp_toolkit.CDPToolkit.html">API Reference</a></p></li>
-</ul>
 </section>
 </section>
 
