@@ -41,7 +41,6 @@ def wow_sell_token(wallet: Wallet, contract_address: str, amount_tokens: str):
         str: A message confirming the sale with the transaction hash
 
     """
-    # Get quote for selling
     eth_quote = get_sell_quote(wallet.network_id, contract_address, amount_tokens)
     has_graduated = get_has_graduated(wallet.network_id, contract_address)
 

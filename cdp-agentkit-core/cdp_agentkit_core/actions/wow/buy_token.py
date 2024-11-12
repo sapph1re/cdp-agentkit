@@ -41,7 +41,6 @@ def wow_buy_token(wallet: Wallet, contract_address: str, amount_eth: str) -> str
         str: A message containing the token purchase details.
 
     """
-    # Get quote
     token_quote = get_buy_quote(wallet.network_id, contract_address, amount_eth)
 
     # Multiply by 99/100 and floor to get 99% of quote as minimum
