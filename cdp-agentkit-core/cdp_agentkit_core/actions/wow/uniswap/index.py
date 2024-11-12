@@ -3,10 +3,11 @@ from decimal import Decimal
 from typing import Literal
 
 from cdp import SmartContract
-from cdp_agentkit_core.actions.wow.constants import WOW_ABI, addresses
-from cdp_agentkit_core.actions.wow.uniswap.constants import UNISWAP_QUOTER_ABI, UNISWAP_V3_ABI
 from web3 import Web3
 from web3.types import Wei
+
+from cdp_agentkit_core.actions.wow.constants import WOW_ABI, addresses
+from cdp_agentkit_core.actions.wow.uniswap.constants import UNISWAP_QUOTER_ABI, UNISWAP_V3_ABI
 
 
 @dataclass
@@ -82,38 +83,33 @@ def get_has_graduated(network_id: str, token_address: str) -> bool:
     """Check if a token has graduated from the Zora Wow protocol.
 
     Args:
-        network_id: Network ID
-        token_address: Token address
+        network_id: Network ID, which is either `base-sepolia` or `base-mainnet`
+        token_address: Token address, such as `0x036CbD53842c5426634e7929541eC2318f3dCF7e`
 
     Returns:
         bool: True if the token has graduated, False otherwise
 
     """
-    marketType = SmartContract.read(
+    market_type = SmartContract.read(
         network_id,
         contract_address=token_address,
         method="marketType",
         abi=WOW_ABI,
     )
-    print(f"Market type: {marketType}")
-    return marketType == 1
+    return market_type == 1
 
 
 def get_pool_info(network_id: str, pool_address: str) -> PoolInfo:
     """Get pool info for a given uniswap v3 pool address.
 
     Args:
-        network_id: Network ID
+        network_id: Network ID, which is either `base-sepolia` or `base-mainnet`
         pool_address: Uniswap v3 pool address
 
     Returns:
         PoolInfo: A PoolInfo object containing the token0, balance0, token1, balance1, fee, liquidity, and sqrt_price_x96.
 
     """
-    pool_contract = w3.eth.contract(
-        address=Web3.to_checksum_address(pool_address), abi=UNISWAP_V3_ABI
-    )
-
     try:
         # Parallel execution of contract calls
         token0 = SmartContract.read(
@@ -182,9 +178,9 @@ def exact_input_single(
     """Get exact input quote from Uniswap.
 
     Args:
-        network_id: Network ID
-        token_in: Token address to swap from
-        token_out: Token address to swap to
+        network_id: Network ID, which is either `base-sepolia` or `base-mainnet`
+        token_in: Token address to swap from, such as `0x036CbD53842c5426634e7929541eC2318f3dCF7e`
+        token_out: Token address to swap to, such as `0x036CbD53842c5426634e7929541eC2318f3dCF7e`
         amount_in: Amount of tokens to swap (in Wei)
         fee: Fee for the swap
 
@@ -220,8 +216,8 @@ def get_uniswap_quote(
     """Get Uniswap quote for buying or selling tokens.
 
     Args:
-        network_id: Network ID
-        token_address: Token address
+        network_id: Network ID, which is either `base-sepolia` or `base-mainnet`
+        token_address: Token address, such as `0x036CbD53842c5426634e7929541eC2318f3dCF7e`
         amount: Amount of tokens (in Wei)
         quote_type: 'buy' or 'sell'
 
@@ -306,7 +302,7 @@ def get_pool_address(token_address: str) -> str:
     """Fetch the uniswap v3 pool address for a given token.
 
     Args:
-        token_address (str): The address of the token contract.
+        token_address (str): The address of the token contract, such as `0x036CbD53842c5426634e7929541eC2318f3dCF7e`
 
     Returns:
         str: The uniswap v3 pool address associated with the token.

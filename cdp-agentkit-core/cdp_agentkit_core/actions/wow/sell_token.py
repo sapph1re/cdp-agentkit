@@ -2,16 +2,16 @@ from collections.abc import Callable
 
 from cdp import Wallet
 from pydantic import BaseModel, Field
-from cdp_agentkit_core.actions.wow.uniswap.index import get_has_graduated
 
 from cdp_agentkit_core.actions.cdp_action import CdpAction
 from cdp_agentkit_core.actions.wow.constants import (
     WOW_ABI,
 )
 from cdp_agentkit_core.actions.wow.quotes import get_sell_quote
+from cdp_agentkit_core.actions.wow.uniswap.index import get_has_graduated
 
 WOW_SELL_TOKEN_PROMPT = """
-This tool will sell a Zora Wow ERC20 memecoin for ETH. This tool takes the WOW token contract address, and the amount of tokens to sell (in wei, meaning 1 is 1 wei or 0.000000000000000001 of the token). The minimum to sell is 1 wei. It is only supported on Base Sepolia and Base Mainnet.
+This tool will sell a Zora Wow ERC20 memecoin for ETH. This tool takes the WOW token contract address, and the amount of tokens to sell (in wei, meaning 1 is 1 wei or 0.000000000000000001 of the token). The minimum to sell is 100000000000000 wei which is 0.0000001 ether. The amount is a string and cannot have any decimal points, since the unit of measurement is wei. Make sure to use the exact amount provided, and if there's any doubt, check by getting more information before continuing with the action. It is only supported on Base Sepolia and Base Mainnet.
 """
 
 
@@ -39,8 +39,8 @@ def sell_wow_tokens(wallet: Wallet, contract_address: str, amount_tokens: str):
 
     """
     # Get quote for selling
-    eth_quote = get_sell_quote(contract_address, amount_tokens)
-    has_graduated = get_has_graduated(contract_address)
+    eth_quote = get_sell_quote(wallet.network_id, contract_address, amount_tokens)
+    has_graduated = get_has_graduated(wallet.network_id, contract_address)
 
     # Multiply by 98/100 and floor to get 98% of quote as minimum (slippage protection)
     min_eth = str(int((eth_quote * 98) // 100))
