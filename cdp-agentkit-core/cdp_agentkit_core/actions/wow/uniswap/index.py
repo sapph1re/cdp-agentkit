@@ -74,11 +74,6 @@ def create_price_info(wei_amount: Wei, eth_price_in_usd: float) -> PriceInfo:
     return PriceInfo(eth=wei_amount, usd=Decimal(str(usd)))
 
 
-# Initialize web3 with your provider (e.g., Infura, Alchemy, or local node)
-w3 = Web3(Web3.HTTPProvider("https://base-sepolia.gateway.tenderly.co/6GhpfVtPzsbJkGjwfgUjBW"))
-
-
-# Replace SmartContract.read calls with web3.py contract calls
 def get_has_graduated(network_id: str, token_address: str) -> bool:
     """Check if a token has graduated from the Zora Wow protocol.
 
@@ -173,7 +168,7 @@ def get_pool_info(network_id: str, pool_address: str) -> PoolInfo:
 
 
 def exact_input_single(
-    network_id: str, token_in: str, token_out: str, amount_in: int, fee: int
+    network_id: str, token_in: str, token_out: str, amount_in: str, fee: str
 ) -> int:
     """Get exact input quote from Uniswap.
 
@@ -188,21 +183,20 @@ def exact_input_single(
         int: Amount of tokens to receive (in Wei)
 
     """
-    quoter_contract = w3.eth.contract(
-        address=Web3.to_checksum_address(addresses[network_id]["UniswapQuoter"]),
-        abi=UNISWAP_QUOTER_ABI,
-    )
-
     try:
-        params = {
-            "tokenIn": Web3.to_checksum_address(token_in),
-            "tokenOut": Web3.to_checksum_address(token_out),
-            "fee": fee,
-            "amountIn": amount_in,
-            "sqrtPriceLimitX96": 0,
-        }
-        # Get just the first value from the returned array
-        amount = quoter_contract.functions.quoteExactInputSingle(params).call()[0]
+        amount = SmartContract.read(
+            network_id,
+            addresses[network_id]["UniswapQuoter"],
+            "quoteExactInputSingle",
+            abi=UNISWAP_QUOTER_ABI,
+            args={
+                "tokenIn": str(Web3.to_checksum_address(token_in)),
+                "tokenOut": str(Web3.to_checksum_address(token_out)),
+                "fee": fee,
+                "amountIn": amount_in,
+                "sqrtPriceLimitX96": 0,
+            },
+        )
 
         return amount
     except Exception as error:
