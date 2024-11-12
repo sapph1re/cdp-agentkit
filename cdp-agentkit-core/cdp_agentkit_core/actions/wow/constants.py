@@ -820,7 +820,7 @@ WOW_FACTORY_CONTRACT_ADDRESSES = {
 }
 
 addresses = {
-    84532: {
+    "base-sepolia": {
         "WowFactory": "0xB09c0b1b18369Ef62e896D5a49Af8d65EFa0A404",
         "WowFactoryImpl": "0xB522291f22FE7FA45D56797F7A685D5c637Edc32",
         "Wow": "0x15ba66e376856F3F6FE53dE9eeAb10dEF10E8C92",
@@ -830,7 +830,7 @@ addresses = {
         "WETH": "0x4200000000000000000000000000000000000006",
         "UniswapQuoter": "0xC5290058841028F1614F3A6F0F5816cAd0df5E27",
     },
-    8453: {
+    "base-mainnet": {
         "WowFactory": "0xA06262157905913f855573f53AD48DE2D4ba1F4A",
         "WowFactoryImpl": "0xe4c17055048aEe01D0d122804816fEe5E6ac4A67",
         "Wow": "0x293997C6a1f2A1cA3aB971f548c4D95585E46282",

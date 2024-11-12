@@ -3,8 +3,8 @@ from decimal import Decimal
 from typing import Literal
 
 from cdp import SmartContract
-from constants import WOW_ABI, addresses
-from uniswap.constants import UNISWAP_QUOTER_ABI, UNISWAP_V3_ABI
+from cdp_agentkit_core.actions.wow.constants import WOW_ABI, addresses
+from cdp_agentkit_core.actions.wow.uniswap.constants import UNISWAP_QUOTER_ABI, UNISWAP_V3_ABI
 from web3 import Web3
 from web3.types import Wei
 
@@ -78,24 +78,32 @@ w3 = Web3(Web3.HTTPProvider("https://base-sepolia.gateway.tenderly.co/6GhpfVtPzs
 
 
 # Replace SmartContract.read calls with web3.py contract calls
-def get_has_graduated(token_address: str) -> bool:
+def get_has_graduated(network_id: str, token_address: str) -> bool:
     """Check if a token has graduated from the Zora Wow protocol.
 
     Args:
+        network_id: Network ID
         token_address: Token address
 
     Returns:
         bool: True if the token has graduated, False otherwise
 
     """
-    contract = w3.eth.contract(address=Web3.to_checksum_address(token_address), abi=WOW_ABI)
-    return contract.functions.marketType().call()
+    marketType = SmartContract.read(
+        network_id,
+        contract_address=token_address,
+        method="marketType",
+        abi=WOW_ABI,
+    )
+    print(f"Market type: {marketType}")
+    return marketType == 1
 
 
-async def get_pool_info(pool_address: str) -> PoolInfo:
+def get_pool_info(network_id: str, pool_address: str) -> PoolInfo:
     """Get pool info for a given uniswap v3 pool address.
 
     Args:
+        network_id: Network ID
         pool_address: Uniswap v3 pool address
 
     Returns:
@@ -108,18 +116,52 @@ async def get_pool_info(pool_address: str) -> PoolInfo:
 
     try:
         # Parallel execution of contract calls
-        token0 = pool_contract.functions.token0().call()
-        token1 = pool_contract.functions.token1().call()
-        fee = pool_contract.functions.fee().call()
-        liquidity = pool_contract.functions.liquidity().call()
-        slot0 = pool_contract.functions.slot0().call()
+        token0 = SmartContract.read(
+            network_id,
+            pool_address,
+            "token0",
+            abi=UNISWAP_V3_ABI,
+        )
+        token1 = SmartContract.read(
+            network_id,
+            pool_address,
+            "token1",
+            abi=UNISWAP_V3_ABI,
+        )
+        fee = SmartContract.read(
+            network_id,
+            pool_address,
+            "fee",
+            abi=UNISWAP_V3_ABI,
+        )
+        liquidity = SmartContract.read(
+            network_id,
+            pool_address,
+            "liquidity",
+            abi=UNISWAP_V3_ABI,
+        )
+        slot0 = SmartContract.read(
+            network_id,
+            pool_address,
+            "slot0",
+            abi=UNISWAP_V3_ABI,
+        )
 
-        # Create token contracts
-        token0_contract = w3.eth.contract(address=Web3.to_checksum_address(token0), abi=WOW_ABI)
-        token1_contract = w3.eth.contract(address=Web3.to_checksum_address(token1), abi=WOW_ABI)
+        balance0 = SmartContract.read(
+            network_id,
+            token0,
+            "balanceOf",
+            abi=WOW_ABI,
+            args={"account": pool_address},
+        )
 
-        balance0 = token0_contract.functions.balanceOf(pool_address).call()
-        balance1 = token1_contract.functions.balanceOf(pool_address).call()
+        balance1 = SmartContract.read(
+            network_id,
+            token1,
+            "balanceOf",
+            abi=WOW_ABI,
+            args={"account": pool_address},
+        )
 
         return PoolInfo(
             token0=token0,
@@ -134,24 +176,24 @@ async def get_pool_info(pool_address: str) -> PoolInfo:
         raise Exception(f"Failed to fetch pool information: {error!s}") from error
 
 
-async def exact_input_single(
-    token_in: str, token_out: str, amount_in: int, fee: int, chain_id: int
+def exact_input_single(
+    network_id: str, token_in: str, token_out: str, amount_in: int, fee: int
 ) -> int:
     """Get exact input quote from Uniswap.
 
     Args:
+        network_id: Network ID
         token_in: Token address to swap from
         token_out: Token address to swap to
         amount_in: Amount of tokens to swap (in Wei)
         fee: Fee for the swap
-        chain_id: Chain ID
 
     Returns:
         int: Amount of tokens to receive (in Wei)
 
     """
     quoter_contract = w3.eth.contract(
-        address=Web3.to_checksum_address(addresses[chain_id]["UniswapQuoter"]),
+        address=Web3.to_checksum_address(addresses[network_id]["UniswapQuoter"]),
         abi=UNISWAP_QUOTER_ABI,
     )
 
@@ -172,13 +214,13 @@ async def exact_input_single(
         return 0
 
 
-async def get_uniswap_quote(
-    chain_id: int, token_address: str, amount: int, quote_type: Literal["buy", "sell"]
+def get_uniswap_quote(
+    network_id: str, token_address: str, amount: int, quote_type: Literal["buy", "sell"]
 ) -> Quote:
     """Get Uniswap quote for buying or selling tokens.
 
     Args:
-        chain_id: Chain ID
+        network_id: Network ID
         token_address: Token address
         amount: Amount of tokens (in Wei)
         quote_type: 'buy' or 'sell'
@@ -195,12 +237,12 @@ async def get_uniswap_quote(
     utilization = Wei(0)
     insufficient_liquidity = False
 
-    pool_address = await get_pool_address(token_address)
+    pool_address = get_pool_address(token_address)
     invalid_pool_error = "Invalid pool address" if not pool_address else None
     print("pool address: " + pool_address)
 
     try:
-        pool_info = await get_pool_info(pool_address, chain_id)
+        pool_info = get_pool_info(network_id, pool_address)
         token0, token1 = pool_info.token0, pool_info.token1
         balance0, balance1 = pool_info.balance0, pool_info.balance1
         fee = pool_info.fee
@@ -209,7 +251,7 @@ async def get_uniswap_quote(
         tokens = (token0, token1)
         balances = (balance0, balance1)
 
-        is_token0_weth = token0.lower() == addresses[chain_id]["WETH"].lower()
+        is_token0_weth = token0.lower() == addresses[network_id]["WETH"].lower()
         token_in = (
             token0
             if (quote_type == "buy" and is_token0_weth)
@@ -223,7 +265,7 @@ async def get_uniswap_quote(
         insufficient_liquidity = quote_type == "buy" and amount > balance_out
         utilization = Wei(int(amount / balance_out)) if quote_type == "buy" else Wei(0)
 
-        quote_result = await exact_input_single(token_in, token_out, amount, fee, chain_id)
+        quote_result = exact_input_single(network_id, token_in, token_out, amount, fee)
         print("quote_result", quote_result)
     except Exception as error:
         print(f"Error fetching quote: {error}")
@@ -245,7 +287,7 @@ async def get_uniswap_quote(
     print(tokens)
     balance_result = None
     if tokens and balances:
-        is_weth_token0 = tokens[0].lower() == addresses[chain_id]["WETH"].lower()
+        is_weth_token0 = tokens[0].lower() == addresses[network_id]["WETH"].lower()
         balance_result = Balance(
             erc20z=Wei(balances[1]) if is_weth_token0 else Wei(balances[0]),
             weth=Wei(balances[0]) if is_weth_token0 else Wei(balances[1]),
@@ -260,7 +302,7 @@ async def get_uniswap_quote(
     )
 
 
-async def get_pool_address(token_address: str) -> str:
+def get_pool_address(token_address: str) -> str:
     """Fetch the uniswap v3 pool address for a given token.
 
     Args:

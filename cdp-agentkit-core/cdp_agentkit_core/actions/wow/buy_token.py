@@ -2,7 +2,7 @@ from collections.abc import Callable
 
 from cdp import Wallet
 from pydantic import BaseModel, Field
-from uniswap import get_has_graduated
+from cdp_agentkit_core.actions.wow.uniswap.index import get_has_graduated
 
 from cdp_agentkit_core.actions import CdpAction
 from cdp_agentkit_core.actions.wow.constants import (
@@ -11,7 +11,7 @@ from cdp_agentkit_core.actions.wow.constants import (
 from cdp_agentkit_core.actions.wow.quotes import get_buy_quote
 
 WOW_BUY_TOKEN_PROMPT = """
-This tool will buy a Zora Wow ERC20 memecoin with ETH. This tool takes the WOW token contract address, the address to receive the tokens, and the amount of ETH to spend (in wei, meaning "1" is 1 wei or 0.000000000000000001 of ETH). It is only supported on Base Sepolia and Base Mainnet.
+This tool will buy a Zora Wow ERC20 memecoin with ETH. This tool takes the WOW token contract address, the address to receive the tokens, and the amount of ETH to spend (in wei, meaning "1" is 1 wei or 0.000000000000000001 of ETH). The minimum to buy is 1 wei. It is only supported on Base Sepolia and Base Mainnet.
 """
 
 
@@ -23,39 +23,36 @@ class WowBuyTokenInput(BaseModel):
         description="The WOW token contract address, such as `0x036CbD53842c5426634e7929541eC2318f3dCF7e`",
     )
 
-    recipient: str = Field(
-        ...,
-        description="Address to receive the tokens, e.g. the agent's wallet address such as `0x036CbD53842c5426634e7929541eC2318f3dCF7e`",
-    )
-
     amount_eth: str = Field(
         ...,
         description="Amount of ETH to spend (in wei), meaning 1 is 1 wei or 0.000000000000000001 of ETH",
     )
 
 
-async def wow_buy_token(wallet: Wallet, contract_address: str, amount_eth: str) -> str:
+def wow_buy_token(wallet: Wallet, contract_address: str, amount_eth: str) -> str:
     """Buy a Zora Wow ERC20 memecoin with ETH.
 
     Args:
         wallet (Wallet): The wallet to create the token from.
         contract_address (str): The WOW token contract address, such as `0x036CbD53842c5426634e7929541eC2318f3dCF7e`
-        recipient (str): Address to receive the tokens, e.g. the agent's wallet address such as `0x036CbD53842c5426634e7929541eC2318f3dCF7e`
         amount_eth (str): Amount of ETH to spend (in wei), meaning 1 is 1 wei or 0.000000000000000001 of ETH
 
     Returns:
         str: A message containing the token purchase details.
 
     """
+    print(f"Contract address: {contract_address}")
+    print(f"Amount ETH: {amount_eth}")
+    print("Getting quote...")
     # Get quote
-    token_quote = await get_buy_quote(contract_address, amount_eth)
+    token_quote = get_buy_quote(wallet.network_id, contract_address, amount_eth)
 
     # Multiply by 99/100 and floor to get 99% of quote as minimum
     min_tokens = str(int((token_quote * 99) // 100))  # Using integer division to floor the result
 
-    has_graduated = get_has_graduated(contract_address)
+    has_graduated = get_has_graduated(wallet.network_id, contract_address)
     print(f"Address: {wallet.default_address.address_id}")
-    print(min_tokens)
+    print(f"Min tokens: {min_tokens}")
     invocation = wallet.invoke_contract(
         contract_address=contract_address,
         method="buy",
