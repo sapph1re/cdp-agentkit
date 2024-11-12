@@ -1,18 +1,12 @@
-import json
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Literal
 
 from cdp import SmartContract
 from constants import WOW_ABI, addresses
+from uniswap.constants import UNISWAP_QUOTER_ABI, UNISWAP_V3_ABI
 from web3 import Web3
 from web3.types import Wei
-
-with open("examples/wow_agent/uniswap_quoter_abi.json") as f:
-    uniswap_quoter_abi = json.load(f)
-
-with open("examples/wow_agent/uniswap_v3_abi.json") as f:
-    uniswap_v3_abi = json.load(f)
 
 
 @dataclass
@@ -109,7 +103,7 @@ async def get_pool_info(pool_address: str) -> PoolInfo:
 
     """
     pool_contract = w3.eth.contract(
-        address=Web3.to_checksum_address(pool_address), abi=uniswap_v3_abi
+        address=Web3.to_checksum_address(pool_address), abi=UNISWAP_V3_ABI
     )
 
     try:
@@ -158,7 +152,7 @@ async def exact_input_single(
     """
     quoter_contract = w3.eth.contract(
         address=Web3.to_checksum_address(addresses[chain_id]["UniswapQuoter"]),
-        abi=uniswap_quoter_abi,
+        abi=UNISWAP_QUOTER_ABI,
     )
 
     try:
