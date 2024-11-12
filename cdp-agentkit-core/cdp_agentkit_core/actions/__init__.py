@@ -8,9 +8,10 @@ from cdp_agentkit_core.actions.register_basename import RegisterBasenameAction
 from cdp_agentkit_core.actions.request_faucet_funds import RequestFaucetFundsAction
 from cdp_agentkit_core.actions.trade import TradeAction
 from cdp_agentkit_core.actions.transfer import TransferAction
-from cdp_agentkit_core.actions.wow.create_token import WowCreateTokenAction
 from cdp_agentkit_core.actions.wow.buy_token import WowBuyTokenAction
+from cdp_agentkit_core.actions.wow.create_token import WowCreateTokenAction
 from cdp_agentkit_core.actions.wow.sell_token import WowSellTokenAction
+
 
 # WARNING: All new CdpAction subclasses must be imported above, otherwise they will not be discovered
 # by get_all_cdp_actions(). The import ensures the class is registered as a subclass of CdpAction.
