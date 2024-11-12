@@ -29,13 +29,16 @@ class WowSellTokenInput(BaseModel):
     )
 
 
-def sell_wow_tokens(wallet: Wallet, contract_address: str, amount_tokens: str):
+def wow_sell_token(wallet: Wallet, contract_address: str, amount_tokens: str):
     """Sell WOW tokens for ETH.
 
     Args:
         wallet (Wallet): The wallet to sell the tokens from.
         contract_address (str): The WOW token contract address, such as `0x036CbD53842c5426634e7929541eC2318f3dCF7e`
         amount_tokens (str): Amount of tokens to sell (in wei), meaning 1 is 1 wei or 0.000000000000000001 of the token
+
+    Returns:
+        str: A message confirming the sale with the transaction hash
 
     """
     # Get quote for selling
@@ -54,13 +57,15 @@ def sell_wow_tokens(wallet: Wallet, contract_address: str, amount_tokens: str):
             "recipient": wallet.default_address.address_id,
             "orderReferrer": "0x0000000000000000000000000000000000000000",
             "comment": "",
-            "expectedMarketType": has_graduated and "1" or "0",
+            "expectedMarketType": "1" if has_graduated else "0",
             "minPayoutSize": min_eth,
             "sqrtPriceLimitX96": "0",
         },
     ).wait()
 
-    return invocation
+    return (
+        f"Sold WoW ERC20 memecoin with transaction hash: {invocation.transaction.transaction_hash}"
+    )
 
 
 class WowSellTokenAction(CdpAction):
@@ -69,4 +74,4 @@ class WowSellTokenAction(CdpAction):
     name: str = "wow_sell_token"
     description: str = WOW_SELL_TOKEN_PROMPT
     args_schema: type[BaseModel] | None = WowSellTokenInput
-    func: Callable[..., str] = sell_wow_tokens
+    func: Callable[..., str] = wow_sell_token

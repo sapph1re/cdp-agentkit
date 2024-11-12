@@ -50,10 +50,10 @@ class PoolInfo:
     """Pool info for a given uniswap v3 pool."""
 
     token0: str
-    balance0: int  # Using int for bigint
+    balance0: int
     token1: str
     balance1: int
-    fee: int  # Using int for number
+    fee: int
     liquidity: int
     sqrt_price_x96: int
 
