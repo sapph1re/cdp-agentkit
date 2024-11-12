@@ -1,6 +1,10 @@
+from collections.abc import Callable
+
 from cdp import Wallet
+from pydantic import BaseModel, Field
 from uniswap.index import get_has_graduated
 
+from cdp_agentkit_core.actions.cdp_action import CdpAction
 from cdp_agentkit_core.actions.wow.constants import (
     WOW_ABI,
 )
@@ -9,6 +13,20 @@ from cdp_agentkit_core.actions.wow.quotes import get_sell_quote
 WOW_SELL_TOKEN_PROMPT = """
 This tool will sell a Zora Wow ERC20 memecoin for ETH. This tool takes the WOW token contract address, and the amount of tokens to sell (in wei, meaning 1 is 1 wei or 0.000000000000000001 of the token). It is only supported on Base Sepolia and Base Mainnet.
 """
+
+
+class WowSellTokenInput(BaseModel):
+    """Input argument schema for sell token action."""
+
+    contract_address: str = Field(
+        ...,
+        description="The WOW token contract address, such as `0x036CbD53842c5426634e7929541eC2318f3dCF7e`",
+    )
+
+    amount_tokens: str = Field(
+        ...,
+        description="Amount of tokens to sell (in wei), meaning 1 is 1 wei or 0.000000000000000001 of the token",
+    )
 
 
 async def sell_wow_tokens(wallet: Wallet, contract_address: str, amount_tokens: str):
@@ -43,3 +61,12 @@ async def sell_wow_tokens(wallet: Wallet, contract_address: str, amount_tokens: 
     ).wait()
 
     return invocation
+
+
+class WowSellTokenAction(CdpAction):
+    """Zora Wow sell token action."""
+
+    name: str = "wow_sell_token"
+    description: str = WOW_SELL_TOKEN_PROMPT
+    args_schema: type[BaseModel] | None = WowSellTokenInput
+    func: Callable[..., str] = sell_wow_tokens

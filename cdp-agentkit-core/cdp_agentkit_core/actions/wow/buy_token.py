@@ -2,7 +2,7 @@ from collections.abc import Callable
 
 from cdp import Wallet
 from pydantic import BaseModel, Field
-from uniswap.index import get_has_graduated
+from uniswap import get_has_graduated
 
 from cdp_agentkit_core.actions import CdpAction
 from cdp_agentkit_core.actions.wow.constants import (
