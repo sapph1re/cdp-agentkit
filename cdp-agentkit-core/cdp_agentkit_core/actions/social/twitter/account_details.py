@@ -3,16 +3,15 @@ from collections.abc import Callable
 import tweepy
 from pydantic import BaseModel
 
-from cdp_agentkit_core.actions.social.twitter.action import TwitterAction
+from cdp_agentkit_core.actions.social.twitter import TwitterAction, TwitterContext
 
 ACCOUNT_DETAILS_PROMPT = """
 This tool will return account details for the currently authenticated Twitter (X) user context."""
 
-
 class AccountDetailsInput(BaseModel):
     """Input argument schema for Twitter account details action."""
 
-def account_details(client: tweepy.Client) -> str:
+def account_details(context: TwitterContext) -> str:
     """Get the authenticated Twitter (X) user account details.
 
     Args:
@@ -25,6 +24,7 @@ def account_details(client: tweepy.Client) -> str:
     message = ""
 
     try:
+        client = context.get_client()
         response = client.get_me()
         user = response.data
 
@@ -42,6 +42,6 @@ class AccountDetailsAction(TwitterAction):
     """Twitter (X) account details action."""
 
     name: str = "account_details"
-    description:str = ACCOUNT_DETAILS_PROMPT
+    description: str = ACCOUNT_DETAILS_PROMPT
     args_schema: type[BaseModel] | None = AccountDetailsInput
     func: Callable[..., str] = account_details

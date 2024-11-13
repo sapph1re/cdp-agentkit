@@ -3,7 +3,7 @@ from collections.abc import Callable
 from pydantic import BaseModel
 
 
-class TwitterAction(BaseModel):
+class Action(BaseModel):
     """Twitter Action Base Class."""
 
     name: str
