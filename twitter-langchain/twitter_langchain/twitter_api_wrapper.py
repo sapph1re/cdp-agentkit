@@ -1,5 +1,7 @@
 """Util that calls Twitter API."""
 
+import contextvars
+import inspect
 from collections.abc import Callable
 from typing import Any
 
@@ -35,9 +37,11 @@ class TwitterApiWrapper(BaseModel):
         )
 
         context = TwitterContext()
+        context.set_api(api)
         context.set_client(client)
 
         values["context"] = context
+        values["api"] = context.api
         values["client"] = context.client
         values["api_key"] = api_key
         values["api_secret"] = api_secret

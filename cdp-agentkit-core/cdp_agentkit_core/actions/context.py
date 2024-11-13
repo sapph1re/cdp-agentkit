@@ -20,7 +20,7 @@ class Context(BaseModel):
         store = self.cvars.get()
 
         if name not in store:
-            store[name] = contextvars.ContextVar(name, default=default)
+            store[name] = ContextVar(name, default=default)
             self.cvars.set(store)
 
     def get(self, name: str) -> Any:
