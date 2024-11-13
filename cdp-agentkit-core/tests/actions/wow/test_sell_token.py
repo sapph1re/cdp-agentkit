@@ -19,11 +19,11 @@ def test_sell_token_input_model_valid():
     """Test that WowSellTokenInput accepts valid parameters."""
     input_model = WowSellTokenInput(
         contract_address=MOCK_CONTRACT_ADDRESS,
-        amount_tokens=MOCK_AMOUNT_TOKENS,
+        amount_tokens_in_wei=MOCK_AMOUNT_TOKENS,
     )
 
     assert input_model.contract_address == MOCK_CONTRACT_ADDRESS
-    assert input_model.amount_tokens == MOCK_AMOUNT_TOKENS
+    assert input_model.amount_tokens_in_wei == MOCK_AMOUNT_TOKENS
 
 
 def test_sell_token_input_model_missing_params():
