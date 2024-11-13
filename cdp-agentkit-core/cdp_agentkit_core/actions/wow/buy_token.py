@@ -57,7 +57,7 @@ def wow_buy_token(wallet: Wallet, contract_address: str, amount_eth_in_wei: str)
             "orderReferrer": "0x0000000000000000000000000000000000000000",
             "expectedMarketType": has_graduated and "1" or "0",
             "minOrderSize": min_tokens,
-            "sqrtPriceLimitX96": "0",  # TODO
+            "sqrtPriceLimitX96": "0",
             "comment": "",
         },
         amount=amount_eth_in_wei,
