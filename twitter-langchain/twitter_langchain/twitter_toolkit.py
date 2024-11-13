@@ -1,7 +1,6 @@
 """TwitterToolkit."""
 
 from cdp_agentkit_core.actions.social.twitter import TWITTER_ACTIONS
-
 from langchain_core.tools import BaseTool
 from langchain_core.tools.base import BaseToolkit
 
@@ -118,7 +117,6 @@ class TwitterToolkit(BaseToolkit):
             TwitterToolkit. The Twitter toolkit.
 
         """
-
         actions = TWITTER_ACTIONS
 
         tools = [

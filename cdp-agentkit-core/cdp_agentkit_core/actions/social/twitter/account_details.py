@@ -1,7 +1,7 @@
 from collections.abc import Callable
 
 import tweepy
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from cdp_agentkit_core.actions.social.twitter.action import TwitterAction
 
