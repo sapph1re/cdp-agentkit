@@ -7,8 +7,8 @@ from cdp_agentkit_core.actions import CdpAction
 from cdp_agentkit_core.actions.wow.constants import (
     WOW_ABI,
 )
-from cdp_agentkit_core.actions.wow.quotes import get_buy_quote
 from cdp_agentkit_core.actions.wow.uniswap.index import get_has_graduated
+from cdp_agentkit_core.actions.wow.utils import get_buy_quote
 
 WOW_BUY_TOKEN_PROMPT = """
 This tool will buy a Zora Wow ERC20 memecoin with ETH. This tool takes the WOW token contract address, the address to receive the tokens, and the amount of ETH to spend (in wei, meaning "1" is 1 wei or 0.000000000000000001 of ETH). The amount is a string and cannot have any decimal points, since the unit of measurement is wei. Make sure to use the exact amount provided, and if there's any doubt, check by getting more information before continuing with the action. The minimum to buy is 100000000000000 wei which is 0.0000001 ether. It is only supported on Base Sepolia and Base Mainnet.
