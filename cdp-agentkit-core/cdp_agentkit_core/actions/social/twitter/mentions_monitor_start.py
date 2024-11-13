@@ -10,11 +10,13 @@ import tweepy
 from pydantic import BaseModel
 
 from cdp_agentkit_core.actions.social.twitter import TwitterAction, TwitterContext
-import cdp_agentkit_core.actions.social.twitter.context as context
+from cdp_agentkit_core.actions.social.twitter.context import context
 from cdp_agentkit_core.actions.social.twitter.mentions import items
 
 MENTIONS_MONITOR_START_PROMPT = """
 This tool will monitor mentions for the currently authenticated Twitter (X) user context."""
+
+threads = Queue()
 
 # TODO: enums
 
@@ -22,7 +24,7 @@ class MentionsMonitorStartInput(BaseModel):
     pass
 
 def mentions_monitor_start() -> str:
-    global trd
+    #  global trd
     #  try:
     #      state = context.get("mentions-state")
     #      if state == "running":
@@ -34,22 +36,33 @@ def mentions_monitor_start() -> str:
 
     #  context.client.set(twitterContext.get_client())
     
-    ctx = contextvars.copy_context()
-    thread = MonitorMentionsThread(ctx)
-    context.unwrap().mentions.set(thread)
+    print("=== monitor mentions start action ===")
+
+    #  ctx = contextvars.copy_context()
+    thread = MonitorMentionsThread()
+
+    ctx = context()
+    ctx.set("monitor-thread", thread)
+
+    #  context.unwrap().mentions.set(thread)
     #  context.unwrap().set("test", thread)
-    context.thread.set(thread)
-    set_thread(thread)
+    #  context.set_mentions(thread)
+    #  context.thread.set(thread)
+    #  set_thread(thread)
     #  thread._ctx = ctx
+    #  threadd.set(thread)
     threads.put(thread)
     thread.start()
 
-    print("...")
+    #  with context.current() as ctx:
+    #      print(ctx.client.get())
+
+    #  print("...")
     #  print(context.unwrap())
     #  print(context.unwrap().mentions.get())
     #  print(context.unwrap().get("test"))
     #  print(context.thread.get())
-    print(get_thread())
+    #  print(get_thread())
 
 
     #  threadContext = contextvars.copy_context()
@@ -69,11 +82,15 @@ def mentions_monitor_start() -> str:
     return "started monitoring"
 
 class MonitorMentionsThread(threading.Thread):
+    ctx: contextvars.Context
     running: bool
 
-    def __init__(self, ctx, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._ctx = ctx
+
+        self.ctx = contextvars.copy_context()
+        self.daemon = True
+
         #  self._ctx = context._context
 
 
@@ -84,14 +101,18 @@ class MonitorMentionsThread(threading.Thread):
         self.mention_id = 0
 
     def run(self):
-        for var, value in self._ctx.items():
+        print("=== monitor mentions thread run() ===")
+        for var, value in self.ctx.items():
             var.set(value)
 
-        print("CONTEXT")
-        #  print(self._ctx.get_client())
-        print(context.get_client())
+        self.monitor()
 
-        items.put("hi")
+        #  with context.current() as ctx:
+            #  print(ctx.client.get())
+        #  print(self._ctx.get_client())
+        #  print(context.get_client())
+
+        #  items.put("hi")
         #  return
         #  try:
         #      state = context.get("mentions-monitor-state")
@@ -101,14 +122,27 @@ class MonitorMentionsThread(threading.Thread):
         #      pass
 
         #  context.set("mentions-monitor-state", "")
-        self.running = True
-        self.monitor()
+        #  self.monitor()
         #  context.set("mentions-monitor-state", "running")
 
     def stop(self):
         self.running = False
 
     def monitor(self):
+        print("=== monitor mentions thread monitor() ===")
+
+        self.running = True
+
+        ctx = context()
+        client = ctx.client.get()
+
+        print("client")
+        print(client)
+
+        #  with context.current() as ctx:
+        #      client = ctx.client.get()
+
+        #      print(ctx.client.get())
 
         #  try:
         #      response = context.get_client().get_me()
@@ -153,12 +187,10 @@ class MentionsMonitorStartAction(TwitterAction):
     args_schema: type[BaseModel] | None = MentionsMonitorStartInput
     func: Callable[..., str] = mentions_monitor_start
 
-def get_thread() -> MonitorMentionsThread:
-    return _thread.get()
+#  def get_thread() -> MonitorMentionsThread:
+#      return _thread.get()
 
-def set_thread(t:MonitorMentionsThread):
-    _thread.set(t)
+#  def set_thread(t:MonitorMentionsThread):
+#      _thread.set(t)
 
-_thread: contextvars.ContextVar[MonitorMentionsThread] = contextvars.ContextVar('monitor-mentions-thread', default=None)
-
-threads = Queue()
+#  threadd: contextvars.ContextVar[MonitorMentionsThread] = contextvars.ContextVar('monitor-mentions-thread', default=None)

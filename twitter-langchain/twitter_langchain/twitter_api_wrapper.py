@@ -11,9 +11,15 @@ from collections.abc import Callable
 from typing import Any
 
 #  from contextvars_registry import ContextVarsRegistry
-from cdp_agentkit_core.actions.social.twitter import TwitterContext
+#  from cdp_agentkit_core.actions.social.twitter import TwitterContext
 from langchain_core.utils import get_from_dict_or_env
+from pydantic import BaseModel, Field, model_validator
 import tweepy
+
+#  from cdp_agentkit_core.actions.context import ContextVarField
+from cdp_agentkit_core.actions.social.twitter.context import TwitterContext, context
+#  from cdp_agentkit_core.actions.social.twitter.context import context
+from cdp_agentkit_core.actions.social.twitter.mentions_monitor_start import MonitorMentionsThread
 
 #  class TwitterContext(ContextVarsRegistry):
 #      client: tweepy.Client | None = None
@@ -24,6 +30,17 @@ class TwitterApiWrapper(BaseModel):
 
     #  twitterContext: TwitterContext | None = None
     #  client:tweepy.Client = Field(..., description="twitter client")
+
+    #  ctx:Any = contextvars.ContextVar("ctx", default=None)
+    #  ctx:Any | None = None
+    #  = ContextVarField(..., description="context var")
+
+    ctx: Any = Field(..., description="context")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.ctx = contextvars.copy_context()
 
     @model_validator(mode="before")
     @classmethod
@@ -43,12 +60,19 @@ class TwitterApiWrapper(BaseModel):
             access_token_secret=access_token_secret,
         )
 
+        ctx = context()
+        ctx.client.set(client)
+
+        #  cls.ctx = ctx
+
         #  ctx = context.get_context()
         #  ctx.set_client(client)
 
         #  context.set_context(ctx)
 
-        context.set_client(client)
+        #  context.set_client(client)
+        #  with context.current() as ctx:
+        #      ctx.client.set(client)
 
         #  with context.context() as ctx:
         #      ctx.set_client(client)
@@ -61,6 +85,7 @@ class TwitterApiWrapper(BaseModel):
 
         #  values["twitterContext"] = twitterContext
         #  values["api"] = api
+        values["ctx"] = ctx
         values["client"] = client
         values["api_key"] = api_key
         values["api_secret"] = api_secret
@@ -87,17 +112,45 @@ class TwitterApiWrapper(BaseModel):
         #  for var, value in ctx.items():
         #      var.set(value)
 
-        print("client")
-        print(context.get_client())
-        print(context.unwrap())
-        print(get_thread())
+        for var, value in self.ctx.items():
+            var.set(value)
 
-        if context.unwrap() is not None:
-            print("yay?")
-            print(context.unwrap().mentions.get())
-        func(**kwargs)
+        print("=== twitter wrapper ===")
+        ctx = context()
+        print(ctx.client.get())
+        #  print(context.get_client())
+        #  print(context.get_mentions())
+        #  print(context.thread.get())
+
+        #  print(context.unwrap())
+        #  print(get_thread())
+
+        #  if context.unwrap() is not None:
+        #      print("yay?")
+        #      print(context.unwrap().mentions.get())
+
+        response = func(**kwargs)
+
+        #  print("saved?")
+        #  if self._ctx is not None:
+        #      print(f"self.ctx:{self._ctx['monitor-thread']}")
+
+        print("thread?")
+        print(f"ctx.get:{ctx.get('monitor-thread')}")
+
+        self.ctx = contextvars.copy_context()
+
+        #  mt = ctx.get("monitor-thread")
+        #  if mt is not None:
+        #      print("thread exists")
+        #      self.ctx.set("monitor-thread", mt)
+        #      #  self._mt = mt
+        #  else:
+        #      print("thread does not exist")
 
         return response
+
+        #  return response
 
         #  if first_kwarg and first_kwarg.annotation is tweepy.Client:
         #      return func(self.client, **kwargs)
