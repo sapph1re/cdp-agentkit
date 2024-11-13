@@ -1,7 +1,5 @@
 """Util that calls Twitter API."""
 
-import contextvars
-import inspect
 from collections.abc import Callable
 from typing import Any
 

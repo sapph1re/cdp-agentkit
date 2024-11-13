@@ -1,7 +1,8 @@
 from contextvars import ContextVar
-from typing import Dict, Any
+from typing import Any
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict
+
 
 class Context(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -12,8 +13,8 @@ class Context(BaseModel):
 
         if not self.cvars.get():
             self.cvars.set({})
-        
-        self._tokens: Dict[str, Any] = {}
+
+        self._tokens: dict[str, Any] = {}
 
     def create_var(self, name: str, default=None) -> None:
         store = self.cvars.get()
@@ -36,7 +37,7 @@ class Context(BaseModel):
         if name not in store:
             self.create_var(name)
             store = self.cvars.get()
-        
+
         self._tokens[name] = store[name].set(value)
 
     def reset(self, name: str = None) -> None:

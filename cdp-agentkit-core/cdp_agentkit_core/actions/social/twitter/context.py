@@ -1,7 +1,9 @@
 import contextvars
+
 import tweepy
 
 from cdp_agentkit_core.actions.context import Context
+
 
 class Context(Context):
     client: contextvars.ContextVar[tweepy.Client] | None = None
