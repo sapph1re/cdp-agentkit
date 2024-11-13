@@ -23,25 +23,25 @@ class WowBuyTokenInput(BaseModel):
         description="The WOW token contract address, such as `0x036CbD53842c5426634e7929541eC2318f3dCF7e`",
     )
 
-    amount_eth: str = Field(
+    amount_eth_in_wei: str = Field(
         ...,
         description="Amount of ETH to spend (in wei), meaning 1 is 1 wei or 0.000000000000000001 of ETH",
     )
 
 
-def wow_buy_token(wallet: Wallet, contract_address: str, amount_eth: str) -> str:
+def wow_buy_token(wallet: Wallet, contract_address: str, amount_eth_in_wei: str) -> str:
     """Buy a Zora Wow ERC20 memecoin with ETH.
 
     Args:
         wallet (Wallet): The wallet to create the token from.
         contract_address (str): The WOW token contract address, such as `0x036CbD53842c5426634e7929541eC2318f3dCF7e`
-        amount_eth (str): Amount of ETH to spend (in wei), meaning 1 is 1 wei or 0.000000000000000001 of ETH
+        amount_eth_in_wei (str): Amount of ETH to spend (in wei), meaning 1 is 1 wei or 0.000000000000000001 of ETH
 
     Returns:
         str: A message containing the token purchase details.
 
     """
-    token_quote = get_buy_quote(wallet.network_id, contract_address, amount_eth)
+    token_quote = get_buy_quote(wallet.network_id, contract_address, amount_eth_in_wei)
 
     # Multiply by 99/100 and floor to get 99% of quote as minimum
     min_tokens = str(int((token_quote * 99) // 100))  # Using integer division to floor the result
@@ -60,7 +60,7 @@ def wow_buy_token(wallet: Wallet, contract_address: str, amount_eth: str) -> str
             "sqrtPriceLimitX96": "0",  # TODO
             "comment": "",
         },
-        amount=amount_eth,
+        amount=amount_eth_in_wei,
         asset_id="wei",
     ).wait()
 

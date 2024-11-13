@@ -23,25 +23,25 @@ class WowSellTokenInput(BaseModel):
         description="The WOW token contract address, such as `0x036CbD53842c5426634e7929541eC2318f3dCF7e`",
     )
 
-    amount_tokens: str = Field(
+    amount_tokens_in_wei: str = Field(
         ...,
         description="Amount of tokens to sell (in wei), meaning 1 is 1 wei or 0.000000000000000001 of the token",
     )
 
 
-def wow_sell_token(wallet: Wallet, contract_address: str, amount_tokens: str):
+def wow_sell_token(wallet: Wallet, contract_address: str, amount_tokens_in_wei: str):
     """Sell WOW tokens for ETH.
 
     Args:
         wallet (Wallet): The wallet to sell the tokens from.
         contract_address (str): The WOW token contract address, such as `0x036CbD53842c5426634e7929541eC2318f3dCF7e`
-        amount_tokens (str): Amount of tokens to sell (in wei), meaning 1 is 1 wei or 0.000000000000000001 of the token
+        amount_tokens_in_wei (str): Amount of tokens to sell (in wei), meaning 1 is 1 wei or 0.000000000000000001 of the token
 
     Returns:
         str: A message confirming the sale with the transaction hash
 
     """
-    eth_quote = get_sell_quote(wallet.network_id, contract_address, amount_tokens)
+    eth_quote = get_sell_quote(wallet.network_id, contract_address, amount_tokens_in_wei)
     has_graduated = get_has_graduated(wallet.network_id, contract_address)
 
     # Multiply by 98/100 and floor to get 98% of quote as minimum (slippage protection)
@@ -52,7 +52,7 @@ def wow_sell_token(wallet: Wallet, contract_address: str, amount_tokens: str):
         method="sell",
         abi=WOW_ABI,
         args={
-            "tokensToSell": str(amount_tokens),
+            "tokensToSell": str(amount_tokens_in_wei),
             "recipient": wallet.default_address.address_id,
             "orderReferrer": "0x0000000000000000000000000000000000000000",
             "comment": "",
