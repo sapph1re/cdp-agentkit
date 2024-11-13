@@ -1,5 +1,5 @@
 from cdp_agentkit_core.actions.social.twitter.action import Action as TwitterAction
-from cdp_agentkit_core.actions.social.twitter.context import Context as TwitterContext
+from cdp_agentkit_core.actions.social.twitter.context import TwitterContext as TwitterContext
 
 from cdp_agentkit_core.actions.social.twitter.account_details import AccountDetailsAction
 from cdp_agentkit_core.actions.social.twitter.mentions_monitor_details import (
