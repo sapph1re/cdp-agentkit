@@ -25,8 +25,7 @@ def current():
     ctx = _context.get()
 
     if ctx is None:
-        raise RuntimeError(
-            "Twitter (X) context is unavailable within this scope.")
+        raise RuntimeError("Twitter (X) context is unavailable within this scope.")
 
     try:
         yield ctx

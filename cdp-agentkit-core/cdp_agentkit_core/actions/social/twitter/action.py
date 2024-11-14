@@ -1,4 +1,5 @@
 import contextvars
+import enum
 import threading
 
 from collections.abc import Callable
@@ -14,23 +15,35 @@ class Action(BaseModel):
     func: Callable[..., str]
 
 
+class ActionThreadState(enum.Enum):
+    NONE = 0
+    RUNNING = 1
+    STOPPING = 2
+    STOPPED = 3
+
+
 class ActionThread(threading.Thread):
-    fn: Callable | None
-    running: bool
-    stopped_event: threading.Event | None
+    fn: Callable | None = None
+    state: ActionThreadState = ActionThreadState.NONE
+    stopped_event: threading.Event | None = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.ctx = contextvars.copy_context()
         self.daemon = True
-        self.running = False
 
     def set_fn(fn: Callable):
         self.fn = fn
 
+    def is_running(self) -> bool:
+        return self.state == ActionThreadState.RUNNING
+
+    def is_stopped(self) -> bool:
+        return self.state == ActionThreadState.STOPPED
+
     def run(self):
-        if self.running:
+        if self.state == ActionThreadState.RUNNING:
             return
 
         for var, value in self.ctx.items():
@@ -42,9 +55,10 @@ class ActionThread(threading.Thread):
         self.fn()
 
     def stop(self) -> threading.Event | None:
-        if self.running is False:
+        if self.state != ActionThreadState.RUNNING:
             return None
 
+        self.state = ActionThreadState.STOPPING
         self.stopped_event = threading.Event()
 
         return self.stopped_event
@@ -53,7 +67,7 @@ class ActionThread(threading.Thread):
         if self.stopped_event is not None:
             self.stopped_event.set()
 
-        self.running = False
+        self.state = ActionThreadState.STOPPED
 
         #  def execute(fn):
         #      def decorator(cls):

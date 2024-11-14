@@ -4,14 +4,17 @@ import tweepy
 from pydantic import BaseModel
 
 from cdp_agentkit_core.actions.social.twitter import TwitterAction, TwitterContext
+from cdp_agentkit_core.actions.social.twitter.context import context
 
 ACCOUNT_DETAILS_PROMPT = """
 This tool will return account details for the currently authenticated Twitter (X) user context."""
 
+
 class AccountDetailsInput(BaseModel):
     """Input argument schema for Twitter account details action."""
 
-def account_details(context: TwitterContext) -> str:
+
+def account_details() -> str:
     """Get the authenticated Twitter (X) user account details.
 
     Args:
@@ -23,8 +26,10 @@ def account_details(context: TwitterContext) -> str:
     """
     message = ""
 
+    ctx = context()
+    client = ctx.client.get()
+
     try:
-        client = context.get_client()
         response = client.get_me()
         user = response.data
 
@@ -37,6 +42,7 @@ def account_details(context: TwitterContext) -> str:
         message = f"Error retrieving authenticated user account details: {e}"
 
     return message
+
 
 class AccountDetailsAction(TwitterAction):
     """Twitter (X) account details action."""

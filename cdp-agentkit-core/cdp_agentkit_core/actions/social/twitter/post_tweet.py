@@ -4,6 +4,7 @@ import tweepy
 from pydantic import BaseModel, Field
 
 from cdp_agentkit_core.actions.social.twitter import TwitterAction, TwitterContext
+from cdp_agentkit_core.actions.social.twitter.context import context
 
 POST_TWEET_PROMPT = """
 This tool will post a tweet on Twitter. The tool takes the text of the tweet as input. Tweets can be maximum 280 characters."""
@@ -18,7 +19,7 @@ class PostTweetInput(BaseModel):
     )
 
 
-def post_tweet(context: TwitterContext, tweet: str) -> str:
+def post_tweet(tweet: str) -> str:
     """Post tweet to Twitter.
 
     Args:
@@ -31,8 +32,10 @@ def post_tweet(context: TwitterContext, tweet: str) -> str:
     """
     message = ""
 
+    ctx = context()
+    client = ctx.client.get()
+
     try:
-        client = context.get_client()
         client.create_tweet(text=tweet)
 
         message = f"Successfully posted to Twitter:\n{tweet}"
@@ -40,6 +43,7 @@ def post_tweet(context: TwitterContext, tweet: str) -> str:
         message = f"Error posting to Twitter:\n{tweet}\n{e}"
 
     return message
+
 
 class PostTweetAction(TwitterAction):
     """Twitter (X) post tweet action."""

@@ -1,6 +1,7 @@
 from cdp_agentkit_core.actions.social.twitter.action import (
     Action as TwitterAction,
     ActionThread as TwitterActionThread,
+    ActionThreadState as TwitterActionThreadState,
 )
 from cdp_agentkit_core.actions.social.twitter.context import TwitterContext as TwitterContext
 

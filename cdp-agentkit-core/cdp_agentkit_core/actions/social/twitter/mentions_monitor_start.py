@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from cdp_agentkit_core.actions.social.twitter import (
     TwitterAction,
     TwitterActionThread,
+    TwitterActionThreadState,
     TwitterContext,
 )
 
@@ -45,7 +46,7 @@ class MonitorMentionsThread(TwitterActionThread):
     """
     current position within the backoff list
     """
-    backoff_index: int
+    backoff_index: int = 0
 
     ""
     errors: Queue = Queue()
@@ -54,12 +55,12 @@ class MonitorMentionsThread(TwitterActionThread):
     """
     ammount of time waited since the last successful call.
     """
-    waited: int
+    waited: int = 0
 
     """
     last mention id retrieved
     """
-    mention_id: int
+    mention_id: int = 0
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -73,18 +74,24 @@ class MonitorMentionsThread(TwitterActionThread):
         if client is None:
             raise RuntimeError("Twitter (X) client is unavailable.")
 
+        #  self.state = TwitterActionThreadState.RUNNING
+        #  while self.state == TwitterActionThreadState.RUNNING:
+        #      time.sleep(1)
+
+        #  self.stopped()
+        #  return
+
         try:
             response = client.get_me()
             me = response.data
         except tweepy.errors.TweepyException as e:
-            raise RuntimeError("Twitter (X) client is unavailable.")
+            raise e
 
-        self.running = True
+        self.state = TwitterActionThreadState.RUNNING
+        while self.state == TwitterActionThreadState.RUNNING:
+            self.waited += 1
 
-        while self.running:
-            waited += 1
-
-            if waited < self.backoff[self.backoff_index]:
+            if self.waited < self.backoff[self.backoff_index]:
                 time.sleep(1)
                 continue
 
@@ -93,11 +100,12 @@ class MonitorMentionsThread(TwitterActionThread):
                 mentions = response.data
             except tweepy.errors.TweepyException as e:
                 raise e
+
                 self.errors.put(e)
                 self.backoff_index = min(self.backoff_index + 1, len(self.backoff) - 1)
 
-                if self.backoff[self.backoff_index] > waited:
-                    waited = 0
+                if self.backoff[self.backoff_index] > self.waited:
+                    self.waited = 0
 
                 continue
 
@@ -107,7 +115,8 @@ class MonitorMentionsThread(TwitterActionThread):
         self.stopped()
 
     def process(self, mentions):
-        collection = context.mentions.get()
+        ctx = context()
+        collection = ctx.mentions.get()
 
         for mention in mentions:
             if mention is None:

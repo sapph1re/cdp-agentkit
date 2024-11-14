@@ -118,7 +118,6 @@ class TwitterToolkit(BaseToolkit):
 
         """
         actions = TWITTER_ACTIONS
-        print(actions)
 
         tools = [
             TwitterTool(

@@ -2,7 +2,11 @@ from collections.abc import Callable
 
 from pydantic import BaseModel
 
-from cdp_agentkit_core.actions.social.twitter import TwitterAction, TwitterContext
+from cdp_agentkit_core.actions.social.twitter import (
+    TwitterAction,
+    TwitterActionThreadState,
+    TwitterContext,
+)
 from cdp_agentkit_core.actions.social.twitter.context import context
 
 MENTIONS_MONITOR_STOP_PROMPT = """
@@ -22,7 +26,7 @@ def mentions_monitor_stop() -> str:
     if thread is None:
         return "monitor cannot be stopped, it is not running!"
 
-    if thread.running is False:
+    if thread.is_running() is False:
         return "monitor has already stopped"
 
     event = thread.stop()
