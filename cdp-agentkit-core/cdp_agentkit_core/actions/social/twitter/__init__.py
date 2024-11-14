@@ -10,6 +10,7 @@ def get_all_twitter_actions() -> list[type[TwitterAction]]:
 
     return actions
 
+
 TWITTER_ACTIONS = get_all_twitter_actions()
 
 __all__ = [
