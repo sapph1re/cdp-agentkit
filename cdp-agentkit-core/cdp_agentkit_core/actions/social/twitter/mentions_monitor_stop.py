@@ -4,10 +4,9 @@ from pydantic import BaseModel
 
 from cdp_agentkit_core.actions.social.twitter import (
     TwitterAction,
-    TwitterActionThreadState,
-    TwitterContext,
 )
 from cdp_agentkit_core.actions.social.twitter.context import context
+from cdp_agentkit_core.actions.social.twitter.mentions_monitor import MentionsMonitor
 
 MENTIONS_MONITOR_STOP_PROMPT = """
 Stop monitoring Twitter (X) mentions
@@ -20,16 +19,16 @@ class MentionsMonitorStopInput(BaseModel):
 
 def mentions_monitor_stop() -> str:
     ctx = context()
-    thread = ctx.get("monitor-thread")
-    ctx.set("monitor-thread", None)
+    monitor = ctx.get(MentionsMonitor.CONTEXT_KEY)
+    ctx.set(MentionsMonitor.CONTEXT_KEY, None)
 
-    if thread is None:
+    if monitor is None:
         return "monitor cannot be stopped, it is not running!"
 
-    if thread.is_running() is False:
+    if monitor.is_running() is False:
         return "monitor has already stopped"
 
-    event = thread.stop()
+    event = monitor.stop()
     event.wait()
 
     return "successfully stopped monitoring for Twitter (X) mentions for the authenticated user."

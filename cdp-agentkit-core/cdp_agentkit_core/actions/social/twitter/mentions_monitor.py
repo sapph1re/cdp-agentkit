@@ -1,22 +1,20 @@
-import contextvars
-import time
-import threading
 from queue import Queue
+from time import sleep
 
 import tweepy
 from pydantic import BaseModel
 
 from cdp_agentkit_core.actions.social.twitter import (
-    TwitterAction,
     TwitterActionThread,
     TwitterActionThreadState,
-    TwitterContext,
 )
 
 from cdp_agentkit_core.actions.social.twitter.context import context
 
 
 class MentionsMonitor(TwitterActionThread):
+    CONTEXT_KEY: str = "mentions-monitor"
+
     """
     https://developer.x.com/en/docs/x-api/rate-limits
     """
@@ -55,7 +53,7 @@ class MentionsMonitor(TwitterActionThread):
 
         #  self.state = TwitterActionThreadState.RUNNING
         #  while self.state == TwitterActionThreadState.RUNNING:
-        #      time.sleep(1)
+        #      sleep(1)
 
         #  self.stopped()
         #  return
@@ -71,7 +69,7 @@ class MentionsMonitor(TwitterActionThread):
             self.waited += 1
 
             if self.waited < self.backoff[self.backoff_index]:
-                time.sleep(1)
+                sleep(1)
                 continue
 
             try:

@@ -1,10 +1,15 @@
 from collections.abc import Callable
+from json import dumps
 
 from pydantic import BaseModel
 
-from cdp_agentkit_core.actions.social.twitter import TwitterAction, TwitterContext
+from cdp_agentkit_core.actions.social.twitter import (
+    TwitterAction,
+)
+from cdp_agentkit_core.actions.social.twitter.context import context
+from cdp_agentkit_core.actions.social.twitter.mentions_monitor import MentionsMonitor
 
-MENTIONS_MONITOR_DETAILS_PROMPT = """show details for mentions."""
+MENTIONS_MONITOR_DETAILS_PROMPT = """show details for the mention monitor."""
 
 
 class MentionsMonitorDetailsInput(BaseModel):
@@ -12,10 +17,24 @@ class MentionsMonitorDetailsInput(BaseModel):
 
 
 def mentions_monitor_details() -> str:
-    #  print(f"size: {items} {items.qsize()}")
-    #  return f"size: {items} {items.qsize()}"
-    return ""
-    pass
+    ctx = context()
+    monitor = ctx.get(MentionsMonitor.CONTEXT_KEY)
+
+    if monitor is None:
+        return "monitor has not been started."
+
+    data = {
+        "is-monitor-running": monitor.is_running(),
+        "mentions": ctx.mentions.get(),
+        "mentions-count": len(ctx.mentions.get()),
+    }
+
+    json = dumps(data)
+
+    return f"""
+        please find the status of the monitor in json format below:
+        {json}
+    """
 
 
 class MentionsMonitorDetailsAction(TwitterAction):

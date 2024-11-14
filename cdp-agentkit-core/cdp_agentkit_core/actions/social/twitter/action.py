@@ -1,5 +1,6 @@
 import contextvars
 import enum
+import time
 import threading
 
 from collections.abc import Callable
@@ -26,6 +27,8 @@ class ActionThread(threading.Thread):
     fn: Callable | None = None
     state: ActionThreadState = ActionThreadState.NONE
     stopped_event: threading.Event | None = None
+    started_at: float = 0
+    stopped_at: float = 0
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -52,6 +55,7 @@ class ActionThread(threading.Thread):
         if self.fn is None:
             return
 
+        self.started_at = time.time()
         self.fn()
 
     def stop(self) -> threading.Event | None:
@@ -67,6 +71,7 @@ class ActionThread(threading.Thread):
         if self.stopped_event is not None:
             self.stopped_event.set()
 
+        self.stopped_at = time.Time()
         self.state = ActionThreadState.STOPPED
 
         #  def execute(fn):
