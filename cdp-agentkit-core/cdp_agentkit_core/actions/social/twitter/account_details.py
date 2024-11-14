@@ -33,6 +33,9 @@ def account_details() -> str:
         response = client.get_me()
         user = response.data
 
+        account = ctx.account
+        account.load(user)
+
         message = f"""Successfully retrieved authenticated user account details. Please present the following as json and not markdown:
             id: {user.id}
             name: {user.name}
@@ -42,6 +45,8 @@ def account_details() -> str:
         message = f"Error retrieving authenticated user account details: {e}"
 
     return message
+
+#  def data() -> dict:
 
 
 class AccountDetailsAction(TwitterAction):

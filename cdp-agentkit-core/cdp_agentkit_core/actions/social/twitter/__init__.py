@@ -3,6 +3,10 @@ from cdp_agentkit_core.actions.social.twitter.action import (
     ActionThread as TwitterActionThread,
     ActionThreadState as TwitterActionThreadState,
 )
+from cdp_agentkit_core.actions.social.twitter.constructs import (
+    Account as TwitterAccount,
+    Mentions as TwitterMentions,
+)
 from cdp_agentkit_core.actions.social.twitter.context import TwitterContext as TwitterContext
 
 from cdp_agentkit_core.actions.social.twitter.account_details import AccountDetailsAction
