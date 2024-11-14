@@ -4,182 +4,144 @@ import contextvars
 import time
 import threading
 
-#  import asyncio
 import tweepy
 
 from pydantic import BaseModel
 
-from cdp_agentkit_core.actions.social.twitter import TwitterAction, TwitterContext
+from cdp_agentkit_core.actions.social.twitter import (
+    TwitterAction,
+    TwitterActionThread,
+    TwitterContext,
+)
+
 from cdp_agentkit_core.actions.social.twitter.context import context
-from cdp_agentkit_core.actions.social.twitter.mentions import items
 
 MENTIONS_MONITOR_START_PROMPT = """
 This tool will monitor mentions for the currently authenticated Twitter (X) user context."""
 
-threads = Queue()
-
-# TODO: enums
 
 class MentionsMonitorStartInput(BaseModel):
     pass
 
+
 def mentions_monitor_start() -> str:
-    #  global trd
-    #  try:
-    #      state = context.get("mentions-state")
-    #      if state == "running":
-    #          return "already running"
-    #  except KeyError as e:
-    #      pass
-
-    #  print(context.get_client())
-
-    #  context.client.set(twitterContext.get_client())
-    
-    print("=== monitor mentions start action ===")
-
-    #  ctx = contextvars.copy_context()
     thread = MonitorMentionsThread()
 
     ctx = context()
     ctx.set("monitor-thread", thread)
 
-    #  context.unwrap().mentions.set(thread)
-    #  context.unwrap().set("test", thread)
-    #  context.set_mentions(thread)
-    #  context.thread.set(thread)
-    #  set_thread(thread)
-    #  thread._ctx = ctx
-    #  threadd.set(thread)
-    threads.put(thread)
     thread.start()
 
-    #  with context.current() as ctx:
-    #      print(ctx.client.get())
-
-    #  print("...")
-    #  print(context.unwrap())
-    #  print(context.unwrap().mentions.get())
-    #  print(context.unwrap().get("test"))
-    #  print(context.thread.get())
-    #  print(get_thread())
+    return "Successfully started monitoring for Twitter (X) mentions."
 
 
-    #  threadContext = contextvars.copy_context()
-    #  threadContext.run(
-    #  thread = threading.Thread(target=monitor_mentions, args=(context, ))
-    #  thread.start()
-    #  context.set("mentions-state", "running")
+class MonitorMentionsThread(TwitterActionThread):
 
+    """
+    https://developer.x.com/en/docs/x-api/rate-limits
+    """
+    backoff: list[int] = [2, 60, 15*60]
 
-    #  asyncio.set_event_loop(loop)
-    #  task = asyncio.create_task(monitor_mentions(context))
-    #  task = asyncio.ensure_future(monitor_mentions(context))
-    #  context.set("mentions-task", task)
+    """
+    current position within the backoff list
+    """
+    backoff_index: int
 
-    #  asyncio.to_thread(monitor_mentions)
+    ""
+    errors: Queue = Queue()
+    ""
 
-    return "started monitoring"
+    """
+    ammount of time waited since the last successful call.
+    """
+    waited: int
 
-class MonitorMentionsThread(threading.Thread):
-    ctx: contextvars.Context
-    running: bool
+    """
+    last mention id retrieved
+    """
+    mention_id: int
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.ctx = contextvars.copy_context()
-        self.daemon = True
-
-        #  self._ctx = context._context
-
-
-        #  print("inbound")
-        #  print(.get_client())
-
-        #  self.context = contextvars.copy_context()
-        self.mention_id = 0
-
-    def run(self):
-        print("=== monitor mentions thread run() ===")
-        for var, value in self.ctx.items():
-            var.set(value)
-
-        self.monitor()
-
-        #  with context.current() as ctx:
-            #  print(ctx.client.get())
-        #  print(self._ctx.get_client())
-        #  print(context.get_client())
-
-        #  items.put("hi")
-        #  return
-        #  try:
-        #      state = context.get("mentions-monitor-state")
-        #      if state == "running":
-        #          return
-        #  except KeyError as e:
-        #      pass
-
-        #  context.set("mentions-monitor-state", "")
-        #  self.monitor()
-        #  context.set("mentions-monitor-state", "running")
-
-    def stop(self):
-        self.running = False
+        self.fn = self.monitor
 
     def monitor(self):
-        print("=== monitor mentions thread monitor() ===")
-
-        self.running = True
-
         ctx = context()
         client = ctx.client.get()
 
-        print("client")
-        print(client)
+        if client is None:
+            raise RuntimeError("Twitter (X) client is unavailable.")
 
-        #  with context.current() as ctx:
-        #      client = ctx.client.get()
+        try:
+            response = client.get_me()
+            me = response.data
+        except tweepy.errors.TweepyException as e:
+            raise RuntimeError("Twitter (X) client is unavailable.")
 
-        #      print(ctx.client.get())
-
-        #  try:
-        #      response = context.get_client().get_me()
-        #      me = response.data
-        #      print(me.id)
-        #  except tweepy.errors.TweepyException as e:
-        #      self.running = False
-        #      return f"Error retrieving authenticated user account details: {e}"
+        self.running = True
 
         while self.running:
-            time.sleep(1)
+            waited += 1
+
+            if waited < self.backoff[self.backoff_index]:
+                time.sleep(1)
+                continue
+
+            try:
+                response = client.get_users_mentions(me.id, since_id=self.mention_id)
+                mentions = response.data
+            except tweepy.errors.TweepyException as e:
+                raise e
+                self.errors.put(e)
+                self.backoff_index = min(self.backoff_index + 1, len(self.backoff) - 1)
+
+                if self.backoff[self.backoff_index] > waited:
+                    waited = 0
+
+                continue
+
+            self.process(mentions)
+            self.waited = 0
+
+        self.stopped()
+
+    def process(self, mentions):
+        collection = context.mentions.get()
+
+        for mention in mentions:
+            if mention is None:
+                continue
+
+            collection.append(mention)
+
+        self.mention_id = mention.id
+
         #  while True:
-            #  state = context.get("mentions-monitor-state")
-            #  if state == "stopped":
-            #      break
+        #  state = context.get("mentions-monitor-state")
+        #  if state == "stopped":
+        #      break
 
-            #context.get("mentions-state") != "stopped":
-            #  try:
-            #      print("fetching mentions")
+        # context.get("mentions-state") != "stopped":
+        #  try:
+        #      print("fetching mentions")
 
-            #      response = context.get_client().get_users_mentions(me.id, since_id=self.mention_id)
-            #      mentions = response.data
+        #      response = context.get_client().get_users_mentions(me.id, since_id=self.mention_id)
+        #      mentions = response.data
 
-            #      for mention in mentions:
-            #          if mention is None:
-            #              print("mention is empty")
-            #              continue
+        #      for mention in mentions:
+        #          if mention is None:
+        #              print("mention is empty")
+        #              continue
 
-            #          print(f"@{mention.user.screen_name}: {mention.text}")
-            #          self.mention_id = mention.id
+        #          print(f"@{mention.user.screen_name}: {mention.text}")
+        #          self.mention_id = mention.id
 
-            #  except tweepy.errors.TweepyException as e:
-            #      print(f"Error: {e}")
+        #  except tweepy.errors.TweepyException as e:
+        #      print(f"Error: {e}")
 
-            #  time.sleep(15 * 60)
+        #  time.sleep(15 * 60)
 
-        print("monitoring stopped")
 
 class MentionsMonitorStartAction(TwitterAction):
     name: str = "mentions_monitor_start"

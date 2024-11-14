@@ -10,19 +10,12 @@ import inspect
 from collections.abc import Callable
 from typing import Any
 
-#  from contextvars_registry import ContextVarsRegistry
-#  from cdp_agentkit_core.actions.social.twitter import TwitterContext
 from langchain_core.utils import get_from_dict_or_env
 from pydantic import BaseModel, Field, model_validator
 import tweepy
 
-#  from cdp_agentkit_core.actions.context import ContextVarField
 from cdp_agentkit_core.actions.social.twitter.context import TwitterContext, context
-#  from cdp_agentkit_core.actions.social.twitter.context import context
 from cdp_agentkit_core.actions.social.twitter.mentions_monitor_start import MonitorMentionsThread
-
-#  class TwitterContext(ContextVarsRegistry):
-#      client: tweepy.Client | None = None
 
 
 class TwitterApiWrapper(BaseModel):
@@ -63,28 +56,6 @@ class TwitterApiWrapper(BaseModel):
         ctx = context()
         ctx.client.set(client)
 
-        #  cls.ctx = ctx
-
-        #  ctx = context.get_context()
-        #  ctx.set_client(client)
-
-        #  context.set_context(ctx)
-
-        #  context.set_client(client)
-        #  with context.current() as ctx:
-        #      ctx.client.set(client)
-
-        #  with context.context() as ctx:
-        #      ctx.set_client(client)
-
-        #  twitterContext = TwitterContext()
-        #  context.set_api(api)
-        #  twitterContext.set_client(client)
-
-        #  context.client.set(client)
-
-        #  values["twitterContext"] = twitterContext
-        #  values["api"] = api
         values["ctx"] = ctx
         values["client"] = client
         values["api_key"] = api_key
@@ -148,11 +119,7 @@ class TwitterApiWrapper(BaseModel):
         #  else:
         #      print("thread does not exist")
 
+        response = func(**kwargs)
+        self.ctx = contextvars.copy_context()
+
         return response
-
-        #  return response
-
-        #  if first_kwarg and first_kwarg.annotation is tweepy.Client:
-        #      return func(self.client, **kwargs)
-        #  else:
-        #      return func(**kwargs)
