@@ -12,6 +12,7 @@ This tool will return account details for the currently authenticated Twitter (X
 class AccountDetailsInput(BaseModel):
     """Input argument schema for Twitter account details action."""
 
+
 def account_details(client: tweepy.Client) -> str:
     """Get the authenticated Twitter (X) user account details.
 
@@ -38,10 +39,11 @@ def account_details(client: tweepy.Client) -> str:
 
     return message
 
+
 class AccountDetailsAction(TwitterAction):
     """Twitter (X) account details action."""
 
     name: str = "account_details"
-    description:str = ACCOUNT_DETAILS_PROMPT
+    description: str = ACCOUNT_DETAILS_PROMPT
     args_schema: type[BaseModel] | None = AccountDetailsInput
     func: Callable[..., str] = account_details

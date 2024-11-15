@@ -39,6 +39,7 @@ def post_tweet(client: tweepy.Client, tweet: str) -> str:
 
     return message
 
+
 class PostTweetAction(TwitterAction):
     """Twitter (X) post tweet action."""
 
