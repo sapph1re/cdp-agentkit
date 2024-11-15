@@ -11,21 +11,10 @@ from cdp_agentkit_core.actions.social.twitter.constructs import Account, Mention
 
 
 class TwitterContext(Context):
-    #  class Config:
-    #      arbitrary_types_allowed = True
-
     client: ContextVar[tweepy.Client] = ContextVar("client", default=None)
 
     account: Account = Account()
     mentions: Mentions = Mentions()
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        #  manager = Manager()
-
-        #  self.me = manager.dict()
-        #  self.mentions = manager.list()
 
 
 def context() -> TwitterContext:

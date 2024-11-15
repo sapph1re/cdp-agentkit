@@ -23,10 +23,12 @@ def mentions_monitor_details() -> str:
     if monitor is None:
         return "monitor has not been started."
 
+    mentions = list(ctx.mentions.get())
+
     data = {
         "is-monitor-running": monitor.is_running(),
-        "mentions": ctx.mentions.get(),
-        "mentions-count": len(ctx.mentions.get()),
+        "mentions": mentions,
+        "mentions-count": len(mentions),
     }
 
     json = dumps(data)

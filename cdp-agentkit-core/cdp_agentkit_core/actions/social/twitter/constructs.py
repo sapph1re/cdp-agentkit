@@ -1,11 +1,11 @@
 from multiprocessing import Manager
-from typing import Dict
+from multiprocessing.managers import DictProxy, ListProxy
 
 
 class Account():
-    data: Dict | None = None
+    data: DictProxy | None = None
 
-    def get(self) -> Dict:
+    def get(self) -> DictProxy:
         if self.data is None:
             self.data = Manager().dict()
 
@@ -46,14 +46,10 @@ class Account():
 
 
 class Mentions():
-    collection: any = None
-    manager: any = None
+    collection: ListProxy = None
 
-    def get(self) -> any:
-        if self.manager is None:
-            self.manager = Manager()
-
+    def get(self) -> ListProxy:
         if self.collection is None:
-            self.collection = self.manager.list()
+            self.collection = Manager().list()
 
         return self.collection

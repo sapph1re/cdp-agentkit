@@ -4,17 +4,29 @@ from pydantic import BaseModel
 
 from cdp_agentkit_core.actions.social.twitter import TwitterAction, TwitterContext
 
-MENTIONS_MONITOR_DETAILS_PROMPT = """
-"""
+MENTIONS_DETAILS_PROMPT = """show mentions for the current Twitter (X) account"""
 
-class MentionsMonitorDetailsInput(BaseModel):
+
+class MentionsDetailsInput(BaseModel):
     pass
 
-def mentions_monitor_details(context: TwitterContext) -> str:
-    pass
 
-class MentionsMonitorDetailsAction(TwitterAction):
-    name: str = "mentions_monitor_details"
-    description: str = MENTIONS_MONITOR_DETAILS_PROMPT
-    args_schema: type[BaseModel] | None = MentionsMonitorDetailsInput
+def mentions_details(context: TwitterContext) -> str:
+    ctx = context()
+    mentions = list(ctx.mentions.get())
+
+    data = {
+        "mentions": mentions,
+        "mentions-count": len(mentions),
+    }
+
+    json = dumps(data)
+
+    return json
+
+
+class MentionsDetailsAction(TwitterAction):
+    name: str = "mentions_details"
+    description: str = MENTIONS_DETAILS_PROMPT
+    args_schema: type[BaseModel] | None = MentionsDetailsInput
     func: Callable[..., str] = account_details

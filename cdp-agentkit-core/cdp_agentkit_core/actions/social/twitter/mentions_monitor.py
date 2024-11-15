@@ -76,8 +76,6 @@ class MentionsMonitor(TwitterActionThread):
                 response = client.get_users_mentions(me.id, since_id=self.mention_id)
                 mentions = response.data
             except tweepy.errors.TweepyException as e:
-                raise e
-
                 self.errors.put(e)
                 self.backoff_index = min(self.backoff_index + 1, len(self.backoff) - 1)
 

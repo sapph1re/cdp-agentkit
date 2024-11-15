@@ -18,13 +18,6 @@ from cdp_agentkit_core.actions.social.twitter.context import context
 class TwitterApiWrapper(BaseModel):
     """Wrapper for Twitter API."""
 
-    #  twitterContext: TwitterContext | None = None
-    #  client:tweepy.Client = Field(..., description="twitter client")
-
-    #  ctx:Any = contextvars.ContextVar("ctx", default=None)
-    #  ctx:Any | None = None
-    #  = ContextVarField(..., description="context var")
-
     ctx: Any = Field(..., description="context")
 
     def __init__(self, *args, **kwargs):
@@ -65,59 +58,8 @@ class TwitterApiWrapper(BaseModel):
     def run_action(self, func: Callable[..., str], **kwargs) -> str:
         """Run a Twitter Action."""
 
-        #  func_signature = inspect.signature(func)
-        #  first_kwarg = next(iter(func_signature.parameters.values()), None)
-
-        response = ""
-
-        #  with context.context() as ctx:
-        #      print("client")
-        #      print(ctx.get_client())
-
-        #  ctx.set_client(self.client)
-
-        #  ctx = contextvars.copy_context()
-        #  for var, value in ctx.items():
-        #      var.set(value)
-
         for var, value in self.ctx.items():
             var.set(value)
-
-        print("=== twitter wrapper ===")
-        ctx = context()
-        print(ctx.client.get())
-        #  print(context.get_client())
-        #  print(context.get_mentions())
-        #  print(context.thread.get())
-
-        #  print(context.unwrap())
-        #  print(get_thread())
-
-        #  if context.unwrap() is not None:
-        #      print("yay?")
-        #      print(context.unwrap().mentions.get())
-
-        response = func(**kwargs)
-
-        #  print("saved?")
-        #  if self._ctx is not None:
-        #      print(f"self.ctx:{self._ctx['monitor-thread']}")
-
-        print("thread?")
-        try:
-            print(f"ctx.get:{ctx.get('monitor-thread')}")
-        except Exception as e:
-            print(e)
-
-        self.ctx = contextvars.copy_context()
-
-        #  mt = ctx.get("monitor-thread")
-        #  if mt is not None:
-        #      print("thread exists")
-        #      self.ctx.set("monitor-thread", mt)
-        #      #  self._mt = mt
-        #  else:
-        #      print("thread does not exist")
 
         response = func(**kwargs)
         self.ctx = contextvars.copy_context()
