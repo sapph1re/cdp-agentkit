@@ -1,6 +1,5 @@
 """Util that calls Twitter API."""
 
-from cdp_agentkit_core.actions.social.twitter.mentions_monitor_start import get_thread
 import cdp_agentkit_core.actions.social.twitter.context as context
 from pydantic import BaseModel, Field, model_validator
 import tweepy
@@ -105,7 +104,10 @@ class TwitterApiWrapper(BaseModel):
         #      print(f"self.ctx:{self._ctx['monitor-thread']}")
 
         print("thread?")
-        print(f"ctx.get:{ctx.get('monitor-thread')}")
+        try:
+            print(f"ctx.get:{ctx.get('monitor-thread')}")
+        except Exception as e:
+            print(e)
 
         self.ctx = contextvars.copy_context()
 
